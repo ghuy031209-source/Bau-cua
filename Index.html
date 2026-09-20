@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Bầu Cua Tôm Cá</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background: #f5e6c8;
+}
+
+h1 {
+    color: #b22222;
+    margin-bottom: 10px;
+}
+
+.balance {
+    font-size: 25px;
+    font-weight: bold;
+    margin: 15px;
+}
+
+.info {
+    font-size: 17px;
+    color: #555;
+    margin-bottom: 20px;
+}
+
+.animals {
+    display: grid;
+    grid-template-columns: repeat(3, 110px);
+    gap: 15px;
+    justify-content: center;
+}
+
+.animal {
+    background: white;
+    border: 3px solid #b22222;
+    border-radius: 15px;
+    padding: 12px 5px;
+    font-size: 38px;
+    cursor: pointer;
+    user-select: none;
+    transition: 0.15s;
+}
+
+.animal:active {
+    transform: scale(0.95);
+}
+
+.animal.selected {
+    background: #ffd700;
+    border-color: #ff8c00;
+    box-shadow: 0 0 12px #ff9800;
+}
+
+.bet-box {
+    margin-top: 25px;
+}
+
+.bet-box p {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+#bet {
+    display: block;
+    width: 180px;
+    height: 50px;
+    margin: 10px auto;
+    padding: 8px;
+    font-size: 24px;
+    font-weight: bold;
+    text-align: center;
+    color: #000;
+    background: white;
+    border: 3px solid #b22222;
+    border-radius: 10px;
+    outline: none;
+}
+
+#bet:focus {
+    border-color: #ff9800;
+    background: #fffbea;
+}
+
+.bet-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.bet-buttons button {
+    padding: 10px 15px;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    background: #555;
+    color: white;
+    cursor: pointer;
+}
+
+.bet-buttons button:active {
+    transform: scale(0.95);
+}
+
+.roll-button {
+    margin-top: 25px;
+    padding: 15px 45px;
+    font-size: 23px;
+    font-weight: bold;
+    border: none;
+    border-radius: 12px;
+    background: #d32f2f;
+    color: white;
+    cursor: pointer;
+}
+
+.roll-button:active {
+    transform: scale(0.95);
+}
+
+.roll-button:disabled {
+    opacity: 0.6;
+}
+
+.dice {
+    min-height: 80px;
+    margin: 25px 0;
+    font-size: 65px;
+}
+
+#result {
+    min-height: 35px;
+    margin-top: 15px;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.reset-button {
+    margin-top: 15px;
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 8px;
+    background: #777;
+    color: white;
+    cursor: pointer;
+}
+
+@media (max-width: 400px) {
+    .animals {
+        grid-template-columns: repeat(3, 95px);
+        gap: 10px;
+    }
+
+    .animal {
+        font-size: 32px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<h1>🎲 BẦU CUA TÔM CÁ 🎲</h1>
+
+<div class="balance">
+    Điểm:
+    <span id="balance">1000</span>
+</div>
+
+<div class="info">
+    Chọn tối đa 3 con
+</div>
+
+<div class="animals">
+
+    <div class="animal" onclick="selectAnimal('Bầu', this)">
+        🍐<br>Bầu
+    </div>
+
+    <div class="animal" onclick="selectAnimal('Cua', this)">
+        🦀<br>Cua
+    </div>
+
+    <div class="animal" onclick="selectAnimal('Tôm', this)">
+        🦐<br>Tôm
+    </div>
+
+    <div class="animal" onclick="selectAnimal('Cá', this)">
+        🐟<br>Cá
+    </div>
+
+    <div class="animal" onclick="selectAnimal('Gà', this)">
+        🐓<br>Gà
+    </div>
+
+    <div class="animal" onclick="selectAnimal('Nai', this)">
+        🦌<br>Nai
+    </div>
+
+</div>
+
+<div class="bet-box">
+
+    <p>Điểm cược</p>
+
+    <input
+        id="bet"
+        type="text"
+        value="100"
+        inputmode="numeric"
+        pattern="[0-9]*"
+        autocomplete="off"
+    >
+
+    <div class="bet-buttons">
+
+        <button onclick="changeBet(-100)">
+            −100
+        </button>
+
+        <button onclick="changeBet(100)">
+            +100
+        </button>
+
+        <button onclick="setMaxBet()">
+            MAX
+        </button>
+
+    </div>
+
+</div>
+
+<button
+    class="roll-button"
+    id="rollButton"
+    onclick="roll()"
+>
+    LẮC 🎲
+</button>
+
+<div class="dice" id="dice">
+    ❓ ❓ ❓
+</div>
+
+<div id="result">
+    Hãy chọn tối đa 3 con!
+</div>
+
+<button class="reset-button" onclick="resetGame()">
+    🔄 Chơi lại
+</button>
+
+<script>
+
+const animals = [
+    "Bầu",
+    "Cua",
+    "Tôm",
+    "Cá",
+    "Gà",
+    "Nai"
+];
+
+const emojis = {
+    "Bầu": "🍐",
+    "Cua": "🦀",
+    "Tôm": "🦐",
+    "Cá": "🐟",
+    "Gà": "🐓",
+    "Nai": "🦌"
+};
+
+let balance = 1000;
+let selectedAnimals = [];
+
+/* =========================
+   CHỌN CON
+========================= */
+
+function selectAnimal(name, element) {
+
+    if (selectedAnimals.includes(name)) {
+
+        selectedAnimals = selectedAnimals.filter(
+            animal => animal !== name
+        );
+
+        element.classList.remove("selected");
+
+        updateResult(
+            "Đã bỏ chọn " + name + "."
+        );
+
+        return;
+    }
+
+    if (selectedAnimals.length >= 3) {
+
+        updateResult(
+            "⚠️ Chỉ được chọn tối đa 3 con!"
+        );
+
+        return;
+    }
+
+    selectedAnimals.push(name);
+
+    element.classList.add("selected");
+
+    updateResult(
+        "Đã chọn: " + selectedAnimals.join(", ")
+    );
+}
+
+/* =========================
+   ĐIỀU CHỈNH CƯỢC
+========================= */
+
+function getBet() {
+
+    let value = parseInt(
+        document.getElementById("bet").value
+    );
+
+    if (isNaN(value)) {
+        value = 0;
+    }
+
+    return value;
+}
+
+function changeBet(amount) {
+
+    let bet = getBet();
+
+    bet += amount;
+
+    if (bet < 100) {
+        bet = 100;
+    }
+
+    if (bet > balance) {
+        bet = balance;
+    }
+
+    document.getElementById("bet").value = bet;
+}
+
+function setMaxBet() {
+
+    document.getElementById("bet").value = balance;
+}
+
+/* =========================
+   LẮC
+========================= */
+
+function roll() {
+
+    if (selectedAnimals.length === 0) {
+
+        updateResult(
+            "⚠️ Hãy chọn ít nhất 1 con!"
+        );
+
+        return;
+    }
+
+    let bet = getBet();
+
+    if (bet <= 0) {
+
+        updateResult(
+            "⚠️ Điểm cược không hợp lệ!"
+        );
+
+        return;
+    }
+
+    if (bet > balance) {
+
+        updateResult(
+            "⚠️ Bạn không đủ điểm!"
+        );
+
+        return;
+    }
+
+    const button = document.getElementById("rollButton");
+
+    button.disabled = true;
+
+    /*
+       Trừ tiền cược trước
+    */
+
+    balance -= bet;
+
+    updateBalance();
+
+    /*
+       Hiệu ứng lắc
+    */
+
+    let count = 0;
+
+    const animation = setInterval(() => {
+
+        const randomDice = [
+            randomAnimal(),
+            randomAnimal(),
+            randomAnimal()
+        ];
+
+        showDice(randomDice);
+
+        count++;
+
+        if (count >= 10) {
+
+            clearInterval(animation);
+
+            setTimeout(() => {
+
+                finishRoll(bet);
+
+                button.disabled = false;
+
+            }, 200);
+
+        }
+
+    }, 100);
+
+}
+
+/* =========================
+   KẾT QUẢ CUỐI
+========================= */
+
+function finishRoll(bet) {
+
+    const result = [
+        randomAnimal(),
+        randomAnimal(),
+        randomAnimal()
+    ];
+
+    showDice(result);
+
+    let winCount = 0;
+
+    selectedAnimals.forEach(selected => {
+
+        result.forEach(item => {
+
+            if (selected === item) {
+                winCount++;
+            }
+
+        });
+
+    });
+
+    /*
+       Luật:
+       0 con: mất tiền cược
+       1 con: nhận lại 2 lần tiền cược
+       2 con: nhận lại 3 lần
+       3 con: nhận lại 4 lần
+    */
+
+    let reward = 0;
+
+    if (winCount > 0) {
+        reward = bet * (winCount + 1);
+        balance += reward;
+    }
+
+    updateBalance();
+
+    if (winCount === 0) {
+
+        updateResult(
+            "😢 Không trúng! Mất " +
+            bet.toLocaleString("vi-VN") +
+            " điểm."
+        );
+
+    } else {
+
+        updateResult(
+            "🎉 Trúng " +
+            winCount +
+            " lần! Nhận " +
+            reward.toLocaleString("vi-VN") +
+            " điểm!"
+        );
+
+    }
+
+    if (balance <= 0) {
+
+        updateResult(
+            "💀 Hết điểm! Hãy bấm Chơi lại."
+        );
+
+        document.getElementById("rollButton").disabled = true;
+    }
+}
+
+/* =========================
+   RANDOM
+========================= */
+
+function randomAnimal() {
+
+    const index = Math.floor(
+        Math.random() * animals.length
+    );
+
+    return animals[index];
+}
+
+/* =========================
+   HIỂN THỊ XÚC XẮC
+========================= */
+
+function showDice(result) {
+
+    document.getElementById("dice").innerHTML =
+        result.map(
+            animal => emojis[animal]
+        ).join(" ");
+}
+
+/* =========================
+   HIỂN THỊ ĐIỂM
+========================= */
+
+function updateBalance() {
+
+    document.getElementById("balance").textContent =
+        balance.toLocaleString("vi-VN");
+}
+
+/* =========================
+   KẾT QUẢ
+========================= */
+
+function updateResult(message) {
+
+    document.getElementById("result").textContent =
+        message;
+}
+
+/* =========================
+   CHƠI LẠI
+========================= */
+
+function resetGame() {
+
+    balance = 1000;
+
+    selectedAnimals = [];
+
+    updateBalance();
+
+    document.getElementById("bet").value = 100;
+
+    document.getElementById("dice").textContent =
+        "❓ ❓ ❓";
+
+    document.getElementById("result").textContent =
+        "Hãy chọn tối đa 3 con!";
+
+    document.querySelectorAll(".animal")
+        .forEach(element => {
+            element.classList.remove("selected");
+        });
+
+    document.getElementById("rollButton").disabled =
+        false;
+}
+
+</script>
+
+</body>
+  </html>
