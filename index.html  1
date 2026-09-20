@@ -18,7 +18,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            touch-action: manipulation;
+            touch-action: manipulation; /* Tối ưu cảm ứng di động, bỏ trễ 300ms */
             overflow-x: hidden;
             padding-bottom: 30px;
         }
@@ -182,7 +182,7 @@
             box-shadow: 0 4px 8px rgba(0,0,0,0.3);
         }
 
-        /* HIỆU ỨNG RUNG LẮC XÚC XẮC */
+        /* Hiệu ứng xoay rung lắc xúc xắc */
         .dice-shake {
             animation: shake 0.6s infinite ease-in-out;
         }
@@ -328,9 +328,9 @@
         </div>
     </div>
 
-    <!-- LOGIC XỬ LÝ SỰ KIỆN, HỆ THỐNG ÂM THANH & GAMEPLAY -->
+    <!-- HỆ THỐNG XỬ LÝ ÂM THANH & GAMEPLAY -->
     <script>
-        // --- BỘ TẠO ÂM THANH TRỰC TIẾP BẰNG WEB AUDIO API ---
+        // --- HỆ THỐNG PHÁT ÂM THANH TRỰC TIẾP QUA WEB AUDIO API ---
         let audioCtx = null;
 
         function getAudioContext() {
@@ -343,7 +343,7 @@
             return audioCtx;
         }
 
-        // Âm thanh 1: Tiếng Cược Coin (Keng / Ting nhẹ)
+        // 1. Tiếng cược coin
         function playCoinSound() {
             try {
                 const ctx = getAudioContext();
@@ -361,7 +361,7 @@
             } catch (e) {}
         }
 
-        // Âm thanh 2: Tiếng Lắc Xúc Xắc (Cạch cạch)
+        // 2. Tiếng lắc xúc xắc
         function playRollSound() {
             try {
                 const ctx = getAudioContext();
@@ -384,11 +384,11 @@
             } catch (e) {}
         }
 
-        // Âm thanh 3: Tiếng Thắng Ván (Nhạc mừng ngắn)
+        // 3. Tiếng thắng ván
         function playWinSound() {
             try {
                 const ctx = getAudioContext();
-                const notes = [523.25, 659.25, 783.99]; // Nốt Do - Mi - Sol
+                const notes = [523.25, 659.25, 783.99]; // Do - Mi - Sol
                 notes.forEach((freq, idx) => {
                     const osc = ctx.createOscillator();
                     const gain = ctx.createGain();
@@ -404,7 +404,7 @@
             } catch (e) {}
         }
 
-        // Âm thanh 4: Tiếng JACKPOT (Rực rỡ)
+        // 4. Tiếng Jackpot
         function playJackpotSound() {
             try {
                 const ctx = getAudioContext();
@@ -473,7 +473,7 @@
                 return;
             }
 
-            // Trừ tiền cược
+            // Trừ coin cược
             coin -= totalBetCost;
             updateUI();
 
@@ -485,9 +485,9 @@
             ];
 
             btnRoll.disabled = true;
-            playRollSound(); // Phát tiếng lắc xúc xắc
+            playRollSound();
 
-            // Bắt đầu hiệu ứng lắc
+            // Hiệu ứng lắc
             diceElements.forEach(dice => {
                 dice.textContent = '❓';
                 dice.classList.add('dice-shake');
@@ -508,14 +508,14 @@
                 diceElements[1].textContent = results[1];
                 diceElements[2].textContent = results[2];
 
-                // Tính điểm & cộng coin
+                // Tính kết quả
                 calculateResult(results, totalBetCost);
 
                 btnRoll.disabled = false;
             }, 1200);
         }
 
-        // Tính kết quả
+        // Tính kết quả & thưởng
         function calculateResult(results, totalBetCost) {
             let winnings = 0;
             let matchCount = 0;
@@ -534,9 +534,9 @@
             if (winnings > 0) {
                 streak++;
                 if (matchCount === 3 && selectedMascots.length === 1) {
-                    playJackpotSound(); // Âm thanh Jackpot
+                    playJackpotSound();
                 } else {
-                    playWinSound(); // Âm thanh Thắng
+                    playWinSound();
                 }
             } else {
                 streak = 0;
