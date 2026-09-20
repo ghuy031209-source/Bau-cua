@@ -18,7 +18,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            touch-action: manipulation; /* Bỏ độ trễ 300ms khi bấm trên điện thoại */
+            touch-action: manipulation;
             overflow-x: hidden;
             padding-bottom: 30px;
         }
@@ -249,12 +249,6 @@
 </head>
 <body>
 
-    <!-- Các tệp âm thanh trực tuyến -->
-    <audio id="sound-roll" src="https://assets.mixkit.co/active_storage/sfx/2008/2008-preview.mp3" preload="auto"></audio>
-    <audio id="sound-win" src="https://assets.mixkit.co/active_storage/sfx/1435/1435-preview.mp3" preload="auto"></audio>
-    <audio id="sound-jackpot" src="https://assets.mixkit.co/active_storage/sfx/2019/2019-preview.mp3" preload="auto"></audio>
-    <audio id="sound-coin" src="https://assets.mixkit.co/active_storage/sfx/888/888-preview.mp3" preload="auto"></audio>
-
     <div class="header">
         <h1>🎲 BẦU CUA COIN 🎲</h1>
         <div class="subtitle">Game giải trí • Coin ảo</div>
@@ -334,8 +328,104 @@
         </div>
     </div>
 
-    <!-- LOGIC XỬ LÝ SỰ KIỆN & GAMEPLAY -->
+    <!-- LOGIC XỬ LÝ SỰ KIỆN, HỆ THỐNG ÂM THANH & GAMEPLAY -->
     <script>
+        // --- BỘ TẠO ÂM THANH TRỰC TIẾP BẰNG WEB AUDIO API ---
+        let audioCtx = null;
+
+        function getAudioContext() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+            return audioCtx;
+        }
+
+        // Âm thanh 1: Tiếng Cược Coin (Keng / Ting nhẹ)
+        function playCoinSound() {
+            try {
+                const ctx = getAudioContext();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(1200, ctx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(1800, ctx.currentTime + 0.08);
+                gain.gain.setValueAtTime(0.2, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.08);
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.start();
+                osc.stop(ctx.currentTime + 0.08);
+            } catch (e) {}
+        }
+
+        // Âm thanh 2: Tiếng Lắc Xúc Xắc (Cạch cạch)
+        function playRollSound() {
+            try {
+                const ctx = getAudioContext();
+                let count = 0;
+                const interval = setInterval(() => {
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(150 + Math.random() * 200, ctx.currentTime);
+                    gain.gain.setValueAtTime(0.3, ctx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.05);
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+                    osc.start();
+                    osc.stop(ctx.currentTime + 0.05);
+
+                    count++;
+                    if (count >= 10) clearInterval(interval);
+                }, 100);
+            } catch (e) {}
+        }
+
+        // Âm thanh 3: Tiếng Thắng Ván (Nhạc mừng ngắn)
+        function playWinSound() {
+            try {
+                const ctx = getAudioContext();
+                const notes = [523.25, 659.25, 783.99]; // Nốt Do - Mi - Sol
+                notes.forEach((freq, idx) => {
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(freq, ctx.currentTime + idx * 0.12);
+                    gain.gain.setValueAtTime(0.25, ctx.currentTime + idx * 0.12);
+                    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + idx * 0.12 + 0.2);
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+                    osc.start(ctx.currentTime + idx * 0.12);
+                    osc.stop(ctx.currentTime + idx * 0.12 + 0.2);
+                });
+            } catch (e) {}
+        }
+
+        // Âm thanh 4: Tiếng JACKPOT (Rực rỡ)
+        function playJackpotSound() {
+            try {
+                const ctx = getAudioContext();
+                const notes = [523.25, 659.25, 783.99, 1046.50, 1318.51];
+                notes.forEach((freq, idx) => {
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(freq, ctx.currentTime + idx * 0.1);
+                    gain.gain.setValueAtTime(0.3, ctx.currentTime + idx * 0.1);
+                    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + idx * 0.1 + 0.3);
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+                    osc.start(ctx.currentTime + idx * 0.1);
+                    osc.stop(ctx.currentTime + idx * 0.1 + 0.3);
+                });
+            } catch (e) {}
+        }
+
+
+        // --- LOGIC GAMEPLAY ---
         const mascots = ['🍐', '🦀', '🦐', '🐟', '🐓', '🦌'];
 
         let coin = 1000;
@@ -345,18 +435,9 @@
         let gamesPlayed = 0;
         let highScore = 1000;
 
-        // Hàm phát âm thanh
-        function playSound(id) {
-            const sound = document.getElementById(id);
-            if (sound) {
-                sound.currentTime = 0;
-                sound.play().catch(() => {});
-            }
-        }
-
         // Chọn / Bỏ chọn linh vật (tối đa 3 con)
         function selectMascot(mascot, element) {
-            playSound('sound-coin');
+            playCoinSound();
             
             if (selectedMascots.includes(mascot)) {
                 selectedMascots = selectedMascots.filter(m => m !== mascot);
@@ -373,7 +454,7 @@
 
         // Đổi mức cược
         function setBet(amount, element) {
-            playSound('sound-coin');
+            playCoinSound();
             currentBetAmount = amount;
             document.querySelectorAll('.bet-btn').forEach(btn => btn.classList.remove('active'));
             element.classList.add('active');
@@ -404,9 +485,9 @@
             ];
 
             btnRoll.disabled = true;
-            playSound('sound-roll');
+            playRollSound(); // Phát tiếng lắc xúc xắc
 
-            // Bắt đầu hiệu ứng lắc (xoay/rung xắc)
+            // Bắt đầu hiệu ứng lắc
             diceElements.forEach(dice => {
                 dice.textContent = '❓';
                 dice.classList.add('dice-shake');
@@ -453,9 +534,9 @@
             if (winnings > 0) {
                 streak++;
                 if (matchCount === 3 && selectedMascots.length === 1) {
-                    playSound('sound-jackpot');
+                    playJackpotSound(); // Âm thanh Jackpot
                 } else {
-                    playSound('sound-win');
+                    playWinSound(); // Âm thanh Thắng
                 }
             } else {
                 streak = 0;
@@ -492,6 +573,7 @@
             if (gamesPlayed === 5 && !window.taskRewarded) {
                 coin += 500;
                 window.taskRewarded = true;
+                playJackpotSound();
                 alert("🎉 Chúc mừng bạn đã hoàn thành nhiệm vụ 5 ván và nhận +500 🪙!");
                 document.getElementById('coin-amount').textContent = coin;
             }
