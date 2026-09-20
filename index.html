@@ -4,170 +4,353 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Bầu Cua Tôm Cá</title>
+<title>🎲 Bầu Cua Coin</title>
 
 <style>
 * {
     box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
 }
 
 body {
     margin: 0;
-    padding: 20px;
+    min-height: 100vh;
     font-family: Arial, sans-serif;
+    color: white;
     text-align: center;
-    background: #f5e6c8;
+
+    background:
+        radial-gradient(circle at top, #ff6b35 0%, transparent 35%),
+        linear-gradient(145deg, #5b0000, #a90000 45%, #4b0000);
 }
 
-h1 {
-    color: #b22222;
-    margin-bottom: 10px;
+/* HEADER */
+
+.header {
+    padding: 25px 15px 10px;
 }
 
-.balance {
-    font-size: 25px;
+.title {
+    margin: 0;
+    font-size: 32px;
+    color: #ffd700;
+    text-shadow:
+        0 3px 0 #7a0000,
+        0 0 15px #ffb300;
+}
+
+.subtitle {
+    margin-top: 8px;
+    color: #ffe9a6;
+}
+
+/* COIN */
+
+.coin-box {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+
+    margin: 15px auto;
+    padding: 10px 22px;
+
+    border: 2px solid #ffd700;
+    border-radius: 30px;
+
+    background: rgba(0,0,0,0.3);
+    box-shadow: 0 0 15px rgba(255,215,0,.35);
+
+    font-size: 22px;
     font-weight: bold;
-    margin: 15px;
 }
 
-.info {
-    font-size: 17px;
-    color: #555;
-    margin-bottom: 20px;
+.coin {
+    font-size: 27px;
 }
+
+/* GAME */
+
+.game {
+    width: min(95%, 500px);
+    margin: auto;
+    padding: 18px;
+
+    border: 2px solid #ffd700;
+    border-radius: 25px;
+
+    background: rgba(70,0,0,.72);
+    box-shadow:
+        0 15px 40px rgba(0,0,0,.4),
+        inset 0 0 25px rgba(255,180,0,.08);
+}
+
+/* ANIMALS */
 
 .animals {
     display: grid;
-    grid-template-columns: repeat(3, 110px);
-    gap: 15px;
-    justify-content: center;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
 }
 
 .animal {
-    background: white;
-    border: 3px solid #b22222;
-    border-radius: 15px;
-    padding: 12px 5px;
-    font-size: 38px;
+    position: relative;
+
+    padding: 15px 5px;
+
+    border: 3px solid transparent;
+    border-radius: 18px;
+
+    background: linear-gradient(#fff, #eee);
+
+    color: #333;
+
     cursor: pointer;
-    user-select: none;
-    transition: 0.15s;
+
+    transition:
+        transform .15s,
+        box-shadow .15s,
+        border .15s;
 }
 
 .animal:active {
-    transform: scale(0.95);
+    transform: scale(.94);
 }
 
 .animal.selected {
-    background: #ffd700;
-    border-color: #ff8c00;
-    box-shadow: 0 0 12px #ff9800;
+    transform: translateY(-5px) scale(1.04);
+
+    border-color: #ffd700;
+
+    box-shadow:
+        0 0 10px #ffd700,
+        0 0 25px rgba(255,215,0,.8);
 }
 
-.bet-box {
-    margin-top: 25px;
-}
-
-.bet-box p {
-    font-size: 20px;
-    font-weight: bold;
-}
-
-#bet {
+.icon {
     display: block;
-    width: 180px;
-    height: 50px;
-    margin: 10px auto;
-    padding: 8px;
-    font-size: 24px;
+    font-size: 48px;
+    margin-bottom: 5px;
+}
+
+.name {
+    font-size: 17px;
     font-weight: bold;
-    text-align: center;
-    color: #000;
-    background: white;
-    border: 3px solid #b22222;
-    border-radius: 10px;
-    outline: none;
 }
 
-#bet:focus {
-    border-color: #ff9800;
-    background: #fffbea;
+/* MÀU ICON */
+
+.bau .icon {
+    filter: hue-rotate(80deg);
 }
 
-.bet-buttons {
+.cua .icon {
+    filter: saturate(2);
+}
+
+.tom .icon {
+    filter: hue-rotate(330deg) saturate(1.5);
+}
+
+.ca .icon {
+    filter: hue-rotate(150deg) saturate(1.5);
+}
+
+.ga .icon {
+    filter: saturate(1.8);
+}
+
+.nai .icon {
+    filter: sepia(1) saturate(2);
+}
+
+/* BET */
+
+.bet-title {
+    margin-top: 22px;
+    color: #ffd700;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.bet-control {
     display: flex;
     justify-content: center;
     gap: 8px;
     margin-top: 10px;
 }
 
-.bet-buttons button {
-    padding: 10px 15px;
-    font-size: 16px;
-    font-weight: bold;
+.bet-control button,
+.max-button {
     border: none;
-    border-radius: 8px;
-    background: #555;
+    border-radius: 10px;
+
+    background: #6b1b1b;
     color: white;
+
+    padding: 10px 14px;
+    font-weight: bold;
+
     cursor: pointer;
 }
 
-.bet-buttons button:active {
-    transform: scale(0.95);
-}
+#bet {
+    width: 120px;
 
-.roll-button {
-    margin-top: 25px;
-    padding: 15px 45px;
-    font-size: 23px;
-    font-weight: bold;
-    border: none;
-    border-radius: 12px;
-    background: #d32f2f;
-    color: white;
-    cursor: pointer;
-}
+    border: 2px solid #ffd700;
+    border-radius: 10px;
 
-.roll-button:active {
-    transform: scale(0.95);
-}
-
-.roll-button:disabled {
-    opacity: 0.6;
-}
-
-.dice {
-    min-height: 80px;
-    margin: 25px 0;
-    font-size: 65px;
-}
-
-#result {
-    min-height: 35px;
-    margin-top: 15px;
+    text-align: center;
     font-size: 20px;
     font-weight: bold;
 }
 
-.reset-button {
-    margin-top: 15px;
-    padding: 10px 20px;
-    font-size: 16px;
-    border: none;
-    border-radius: 8px;
-    background: #777;
+/* DICE */
+
+.dice-area {
+    margin: 25px 0 15px;
+}
+
+.dice {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+
+    min-height: 75px;
+}
+
+.die {
+    width: 70px;
+    height: 70px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 18px;
+
+    background: white;
+    color: #333;
+
+    font-size: 45px;
+
+    box-shadow:
+        0 5px 10px rgba(0,0,0,.4);
+}
+
+.shaking {
+    animation: shake .12s infinite alternate;
+}
+
+@keyframes shake {
+    from {
+        transform: rotate(-8deg) translateY(-3px);
+    }
+
+    to {
+        transform: rotate(8deg) translateY(3px);
+    }
+}
+
+/* ROLL BUTTON */
+
+.roll-button {
+    width: 85%;
+
+    margin: 10px auto;
+    padding: 16px;
+
+    border: 3px solid #ffd700;
+    border-radius: 18px;
+
+    background: linear-gradient(#ff4747, #b50000);
     color: white;
+
+    font-size: 24px;
+    font-weight: bold;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 5px 0 #620000,
+        0 0 15px rgba(255,215,0,.35);
+}
+
+.roll-button:active {
+    transform: translateY(4px);
+    box-shadow: 0 1px 0 #620000;
+}
+
+.roll-button:disabled {
+    opacity: .6;
+}
+
+/* RESULT */
+
+.result {
+    min-height: 45px;
+    margin: 15px 0;
+
+    color: #ffe68a;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.win {
+    animation: win .6s ease;
+}
+
+@keyframes win {
+    0% {
+        transform: scale(.8);
+        opacity: 0;
+    }
+
+    60% {
+        transform: scale(1.15);
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* RESET */
+
+.reset {
+    margin-top: 5px;
+
+    padding: 9px 18px;
+
+    border: none;
+    border-radius: 10px;
+
+    background: #444;
+    color: white;
+
     cursor: pointer;
 }
 
-@media (max-width: 400px) {
-    .animals {
-        grid-template-columns: repeat(3, 95px);
-        gap: 10px;
+/* MOBILE */
+
+@media(max-width:400px) {
+
+    .title {
+        font-size: 27px;
     }
 
-    .animal {
-        font-size: 32px;
+    .game {
+        padding: 12px;
+    }
+
+    .icon {
+        font-size: 40px;
+    }
+
+    .die {
+        width: 60px;
+        height: 60px;
+        font-size: 38px;
     }
 }
 </style>
@@ -175,95 +358,134 @@ h1 {
 
 <body>
 
-<h1>🎲 BẦU CUA TÔM CÁ 🎲</h1>
+<div class="header">
 
-<div class="balance">
-    Điểm:
-    <span id="balance">1000</span>
-</div>
+    <h1 class="title">
+        🎲 BẦU CUA COIN 🎲
+    </h1>
 
-<div class="info">
-    Chọn tối đa 3 con
-</div>
-
-<div class="animals">
-
-    <div class="animal" onclick="selectAnimal('Bầu', this)">
-        🍐<br>Bầu
+    <div class="subtitle">
+        Game giải trí • Coin ảo
     </div>
 
-    <div class="animal" onclick="selectAnimal('Cua', this)">
-        🦀<br>Cua
-    </div>
-
-    <div class="animal" onclick="selectAnimal('Tôm', this)">
-        🦐<br>Tôm
-    </div>
-
-    <div class="animal" onclick="selectAnimal('Cá', this)">
-        🐟<br>Cá
-    </div>
-
-    <div class="animal" onclick="selectAnimal('Gà', this)">
-        🐓<br>Gà
-    </div>
-
-    <div class="animal" onclick="selectAnimal('Nai', this)">
-        🦌<br>Nai
+    <div class="coin-box">
+        <span class="coin">🪙</span>
+        <span id="balance">1000</span>
     </div>
 
 </div>
 
-<div class="bet-box">
 
-    <p>Điểm cược</p>
+<div class="game">
 
-    <input
-        id="bet"
-        type="text"
-        value="100"
-        inputmode="numeric"
-        pattern="[0-9]*"
-        autocomplete="off"
-    >
+    <div class="animals">
 
-    <div class="bet-buttons">
+        <div class="animal bau"
+             onclick="selectAnimal('Bầu',this)">
+            <span class="icon">🍐</span>
+            <span class="name">Bầu</span>
+        </div>
+
+        <div class="animal cua"
+             onclick="selectAnimal('Cua',this)">
+            <span class="icon">🦀</span>
+            <span class="name">Cua</span>
+        </div>
+
+        <div class="animal tom"
+             onclick="selectAnimal('Tôm',this)">
+            <span class="icon">🦐</span>
+            <span class="name">Tôm</span>
+        </div>
+
+        <div class="animal ca"
+             onclick="selectAnimal('Cá',this)">
+            <span class="icon">🐟</span>
+            <span class="name">Cá</span>
+        </div>
+
+        <div class="animal ga"
+             onclick="selectAnimal('Gà',this)">
+            <span class="icon">🐓</span>
+            <span class="name">Gà</span>
+        </div>
+
+        <div class="animal nai"
+             onclick="selectAnimal('Nai',this)">
+            <span class="icon">🦌</span>
+            <span class="name">Nai</span>
+        </div>
+
+    </div>
+
+
+    <div class="bet-title">
+        🪙 Coin cược
+    </div>
+
+    <div class="bet-control">
 
         <button onclick="changeBet(-100)">
             −100
         </button>
 
+        <input
+            id="bet"
+            value="100"
+            inputmode="numeric"
+        >
+
         <button onclick="changeBet(100)">
             +100
         </button>
 
-        <button onclick="setMaxBet()">
+        <button class="max-button"
+                onclick="maxBet()">
             MAX
         </button>
 
     </div>
 
+
+    <div class="dice-area">
+
+        <div class="dice" id="dice">
+
+            <div class="die">❓</div>
+            <div class="die">❓</div>
+            <div class="die">❓</div>
+
+        </div>
+
+    </div>
+
+
+    <button
+        class="roll-button"
+        id="rollButton"
+        onclick="roll()"
+    >
+        🎲 LẮC!
+    </button>
+
+
+    <div
+        class="result"
+        id="result"
+    >
+        Chọn con bạn muốn chơi!
+    </div>
+
+
+    <button
+        class="reset"
+        onclick="resetGame()"
+    >
+        🔄 Chơi lại
+    </button>
+
 </div>
 
-<button
-    class="roll-button"
-    id="rollButton"
-    onclick="roll()"
->
-    LẮC 🎲
-</button>
-
-<div class="dice" id="dice">
-    ❓ ❓ ❓
-</div>
-
-<div id="result">
-    Hãy chọn tối đa 3 con!
-</div>
-
-<button class="reset-button" onclick="resetGame()">
-    🔄 Chơi lại
-</button>
 
 <script>
 
@@ -286,7 +508,78 @@ const emojis = {
 };
 
 let balance = 1000;
-let selectedAnimals = [];
+let selected = [];
+
+
+/* =========================
+   ÂM THANH
+========================= */
+
+let audioContext;
+
+function sound(type) {
+
+    try {
+
+        if (!audioContext) {
+            audioContext =
+                new (window.AudioContext ||
+                window.webkitAudioContext)();
+        }
+
+        const oscillator =
+            audioContext.createOscillator();
+
+        const gain =
+            audioContext.createGain();
+
+        oscillator.connect(gain);
+        gain.connect(audioContext.destination);
+
+        if (type === "coin") {
+
+            oscillator.frequency.value = 880;
+
+            gain.gain.setValueAtTime(
+                0.18,
+                audioContext.currentTime
+            );
+
+            gain.gain.exponentialRampToValueAtTime(
+                0.001,
+                audioContext.currentTime + 0.25
+            );
+
+            oscillator.start();
+
+            oscillator.stop(
+                audioContext.currentTime + 0.25
+            );
+
+        } else {
+
+            oscillator.frequency.value = 220;
+
+            gain.gain.setValueAtTime(
+                0.12,
+                audioContext.currentTime
+            );
+
+            gain.gain.exponentialRampToValueAtTime(
+                0.001,
+                audioContext.currentTime + 0.15
+            );
+
+            oscillator.start();
+
+            oscillator.stop(
+                audioContext.currentTime + 0.15
+            );
+        }
+
+    } catch(e) {}
+}
+
 
 /* =========================
    CHỌN CON
@@ -294,48 +587,52 @@ let selectedAnimals = [];
 
 function selectAnimal(name, element) {
 
-    if (selectedAnimals.includes(name)) {
+    sound("click");
 
-        selectedAnimals = selectedAnimals.filter(
-            animal => animal !== name
-        );
+    if (selected.includes(name)) {
+
+        selected =
+            selected.filter(x => x !== name);
 
         element.classList.remove("selected");
 
-        updateResult(
-            "Đã bỏ chọn " + name + "."
+        showResult(
+            "Đã bỏ chọn " + name
         );
 
         return;
     }
 
-    if (selectedAnimals.length >= 3) {
+    if (selected.length >= 3) {
 
-        updateResult(
-            "⚠️ Chỉ được chọn tối đa 3 con!"
+        showResult(
+            "⚠️ Chỉ chọn tối đa 3 con!"
         );
 
         return;
     }
 
-    selectedAnimals.push(name);
+    selected.push(name);
 
     element.classList.add("selected");
 
-    updateResult(
-        "Đã chọn: " + selectedAnimals.join(", ")
+    showResult(
+        "Đã chọn: " +
+        selected.join(" • ")
     );
 }
 
+
 /* =========================
-   ĐIỀU CHỈNH CƯỢC
+   BET
 ========================= */
 
 function getBet() {
 
-    let value = parseInt(
-        document.getElementById("bet").value
-    );
+    let value =
+        parseInt(
+            document.getElementById("bet").value
+        );
 
     if (isNaN(value)) {
         value = 0;
@@ -344,37 +641,40 @@ function getBet() {
     return value;
 }
 
+
 function changeBet(amount) {
 
-    let bet = getBet();
+    let value = getBet();
 
-    bet += amount;
+    value += amount;
 
-    if (bet < 100) {
-        bet = 100;
-    }
+    if (value < 100)
+        value = 100;
 
-    if (bet > balance) {
-        bet = balance;
-    }
+    if (value > balance)
+        value = balance;
 
-    document.getElementById("bet").value = bet;
+    document.getElementById("bet").value =
+        value;
 }
 
-function setMaxBet() {
 
-    document.getElementById("bet").value = balance;
+function maxBet() {
+
+    document.getElementById("bet").value =
+        balance;
 }
+
 
 /* =========================
-   LẮC
+   ROLL
 ========================= */
 
 function roll() {
 
-    if (selectedAnimals.length === 0) {
+    if (selected.length === 0) {
 
-        updateResult(
+        showResult(
             "⚠️ Hãy chọn ít nhất 1 con!"
         );
 
@@ -383,74 +683,71 @@ function roll() {
 
     let bet = getBet();
 
-    if (bet <= 0) {
+    if (bet <= 0 || bet > balance) {
 
-        updateResult(
-            "⚠️ Điểm cược không hợp lệ!"
+        showResult(
+            "⚠️ Số coin không hợp lệ!"
         );
 
         return;
     }
-
-    if (bet > balance) {
-
-        updateResult(
-            "⚠️ Bạn không đủ điểm!"
-        );
-
-        return;
-    }
-
-    const button = document.getElementById("rollButton");
-
-    button.disabled = true;
-
-    /*
-       Trừ tiền cược trước
-    */
 
     balance -= bet;
 
     updateBalance();
 
-    /*
-       Hiệu ứng lắc
-    */
+    const button =
+        document.getElementById("rollButton");
 
-    let count = 0;
+    button.disabled = true;
 
-    const animation = setInterval(() => {
+    const dice =
+        document.querySelectorAll(".die");
 
-        const randomDice = [
-            randomAnimal(),
-            randomAnimal(),
-            randomAnimal()
-        ];
+    dice.forEach(d => {
+        d.classList.add("shaking");
+    });
 
-        showDice(randomDice);
+    let animationCount = 0;
 
-        count++;
+    const animation =
+        setInterval(() => {
 
-        if (count >= 10) {
+            dice.forEach(d => {
 
-            clearInterval(animation);
+                const random =
+                    animals[
+                        Math.floor(
+                            Math.random() *
+                            animals.length
+                        )
+                    ];
 
-            setTimeout(() => {
+                d.textContent =
+                    emojis[random];
+            });
+
+            animationCount++;
+
+            if (animationCount >= 15) {
+
+                clearInterval(animation);
+
+                dice.forEach(d => {
+                    d.classList.remove(
+                        "shaking"
+                    );
+                });
 
                 finishRoll(bet);
+            }
 
-                button.disabled = false;
-
-            }, 200);
-
-        }
-
-    }, 100);
-
+        }, 100);
 }
 
+
 /* =========================
-   KẾT QUẢ CUỐI
+   FINISH
 ========================= */
 
 function finishRoll(bet) {
@@ -461,68 +758,81 @@ function finishRoll(bet) {
         randomAnimal()
     ];
 
-    showDice(result);
+    const dice =
+        document.querySelectorAll(".die");
 
-    let winCount = 0;
+    dice.forEach((d, i) => {
+        d.textContent =
+            emojis[result[i]];
+    });
 
-    selectedAnimals.forEach(selected => {
+    let count = 0;
+
+    selected.forEach(name => {
 
         result.forEach(item => {
 
-            if (selected === item) {
-                winCount++;
+            if (name === item) {
+                count++;
             }
 
         });
 
     });
 
+
     /*
-       Luật:
-       0 con: mất tiền cược
-       1 con: nhận lại 2 lần tiền cược
-       2 con: nhận lại 3 lần
-       3 con: nhận lại 4 lần
+       Coin ảo:
+       Không trúng = 0
+       Trúng 1 = +2 lần cược
+       Trúng 2 = +3 lần cược
+       Trúng 3 = +4 lần cược
     */
 
-    let reward = 0;
+    if (count === 0) {
 
-    if (winCount > 0) {
-        reward = bet * (winCount + 1);
-        balance += reward;
-    }
-
-    updateBalance();
-
-    if (winCount === 0) {
-
-        updateResult(
-            "😢 Không trúng! Mất " +
-            bet.toLocaleString("vi-VN") +
-            " điểm."
+        showResult(
+            "😢 Không trúng lần này!"
         );
 
     } else {
 
-        updateResult(
+        const reward =
+            bet * (count + 1);
+
+        balance += reward;
+
+        updateBalance();
+
+        sound("coin");
+
+        showResult(
             "🎉 Trúng " +
-            winCount +
-            " lần! Nhận " +
+            count +
+            " lần! +" +
             reward.toLocaleString("vi-VN") +
-            " điểm!"
+            " 🪙"
         );
 
     }
 
-    if (balance <= 0) {
+    document
+        .getElementById("result")
+        .classList.add("win");
 
-        updateResult(
-            "💀 Hết điểm! Hãy bấm Chơi lại."
-        );
+    setTimeout(() => {
 
-        document.getElementById("rollButton").disabled = true;
-    }
+        document
+            .getElementById("result")
+            .classList.remove("win");
+
+    }, 600);
+
+    document
+        .getElementById("rollButton")
+        .disabled = false;
 }
+
 
 /* =========================
    RANDOM
@@ -530,75 +840,74 @@ function finishRoll(bet) {
 
 function randomAnimal() {
 
-    const index = Math.floor(
-        Math.random() * animals.length
-    );
-
-    return animals[index];
+    return animals[
+        Math.floor(
+            Math.random() *
+            animals.length
+        )
+    ];
 }
 
-/* =========================
-   HIỂN THỊ XÚC XẮC
-========================= */
-
-function showDice(result) {
-
-    document.getElementById("dice").innerHTML =
-        result.map(
-            animal => emojis[animal]
-        ).join(" ");
-}
 
 /* =========================
-   HIỂN THỊ ĐIỂM
+   UI
 ========================= */
 
 function updateBalance() {
 
-    document.getElementById("balance").textContent =
+    document.getElementById("balance")
+        .textContent =
         balance.toLocaleString("vi-VN");
 }
 
-/* =========================
-   KẾT QUẢ
-========================= */
 
-function updateResult(message) {
+function showResult(text) {
 
-    document.getElementById("result").textContent =
-        message;
+    document.getElementById("result")
+        .textContent = text;
 }
 
+
 /* =========================
-   CHƠI LẠI
+   RESET
 ========================= */
 
 function resetGame() {
 
     balance = 1000;
 
-    selectedAnimals = [];
+    selected = [];
 
     updateBalance();
 
-    document.getElementById("bet").value = 100;
+    document.getElementById("bet")
+        .value = 100;
 
-    document.getElementById("dice").textContent =
-        "❓ ❓ ❓";
-
-    document.getElementById("result").textContent =
-        "Hãy chọn tối đa 3 con!";
+    document.getElementById("dice")
+        .innerHTML = `
+            <div class="die">❓</div>
+            <div class="die">❓</div>
+            <div class="die">❓</div>
+        `;
 
     document.querySelectorAll(".animal")
         .forEach(element => {
-            element.classList.remove("selected");
+
+            element.classList.remove(
+                "selected"
+            );
+
         });
 
-    document.getElementById("rollButton").disabled =
-        false;
+    document.getElementById("rollButton")
+        .disabled = false;
+
+    showResult(
+        "Chọn con bạn muốn chơi!"
+    );
 }
 
 </script>
 
 </body>
-  </html>
+</html>
