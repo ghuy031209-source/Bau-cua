@@ -334,6 +334,13 @@ body {
 /* MOBILE */
 
 @media(max-width:400px) {
+    .dashboard {
+        gap: 5px;
+    }
+    .stat {
+        font-size: 11px;
+    }
+
 
     .title {
         font-size: 27px;
@@ -353,10 +360,177 @@ body {
         font-size: 38px;
     }
 }
+
+
+/* WELCOME MODAL */
+.welcome-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: rgba(20,0,0,.78);
+    backdrop-filter: blur(6px);
+    animation: fadeIn .25s ease;
+}
+.welcome-card {
+    width: min(92%, 430px);
+    padding: 28px 22px 22px;
+    border: 3px solid #ffd700;
+    border-radius: 25px;
+    background:
+        radial-gradient(circle at top, #ff5b2e 0%, transparent 38%),
+        linear-gradient(145deg, #650000, #a90000 50%, #4b0000);
+    box-shadow: 0 20px 60px rgba(0,0,0,.65), 0 0 30px rgba(255,215,0,.3);
+    text-align: center;
+    animation: popIn .35s ease;
+}
+.welcome-icon {
+    font-size: 58px;
+    margin-bottom: 4px;
+}
+.welcome-title {
+    margin: 0;
+    color: #ffd700;
+    font-size: 30px;
+    text-shadow: 0 3px 0 #6f0000, 0 0 15px #ffb300;
+}
+.welcome-text {
+    margin: 10px 0 18px;
+    color: #ffe9a6;
+    line-height: 1.6;
+}
+.welcome-rules {
+    margin: 0 0 20px;
+    padding: 14px;
+    border-radius: 15px;
+    background: rgba(0,0,0,.25);
+    color: #fff4c7;
+    text-align: left;
+    line-height: 1.75;
+    font-size: 14px;
+}
+.start-button {
+    width: 100%;
+    padding: 14px;
+    border: 2px solid #ffd700;
+    border-radius: 15px;
+    background: linear-gradient(#ff4747, #b50000);
+    color: white;
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 5px 0 #620000;
+}
+.start-button:active {
+    transform: translateY(3px);
+    box-shadow: 0 2px 0 #620000;
+}
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+@keyframes popIn {
+    from { transform: scale(.82); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+/* DASHBOARD */
+.dashboard {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin: 10px auto 0;
+    width: min(95%, 500px);
+}
+.stat {
+    padding: 9px 4px;
+    border: 1px solid rgba(255,215,0,.55);
+    border-radius: 12px;
+    background: rgba(0,0,0,.22);
+    color: #ffe9a6;
+    font-size: 12px;
+}
+.stat b {
+    color: #ffd700;
+    font-size: 16px;
+}
+
+/* BONUS + HISTORY */
+.bonus-box, .history-box {
+    margin-top: 16px;
+    padding: 13px;
+    border-radius: 15px;
+    background: rgba(0,0,0,.22);
+    border: 1px solid rgba(255,215,0,.4);
+}
+.bonus-title, .history-title {
+    color: #ffd700;
+    font-weight: bold;
+    margin-bottom: 7px;
+}
+.progress {
+    height: 8px;
+    margin-top: 9px;
+    overflow: hidden;
+    border-radius: 20px;
+    background: rgba(255,255,255,.18);
+}
+#progressBar {
+    width: 0%;
+    height: 100%;
+    border-radius: 20px;
+    background: #ffd700;
+    transition: width .35s ease;
+}
+#history {
+    text-align: left;
+    font-size: 13px;
+    line-height: 1.8;
+    color: #ffe9a6;
+}
+.history-win { color: #ffe16b; }
+.history-lose { color: #ffb0b0; }
+
+.jackpot {
+    animation: jackpot .9s ease;
+}
+@keyframes jackpot {
+    0%,100% { transform: scale(1); }
+    30% { transform: scale(1.18) rotate(-2deg); }
+    60% { transform: scale(1.08) rotate(2deg); }
+}
+
 </style>
 </head>
 
 <body>
+
+<div class="welcome-overlay" id="welcomeOverlay">
+    <div class="welcome-card">
+        <div class="welcome-icon">🎲🪙🎲</div>
+        <h2 class="welcome-title">BẦU CUA COIN</h2>
+        <div class="welcome-text">
+            🎉 Chào mừng bạn đến với trò chơi!<br>
+            <b>Coin ảo • Chơi vui • Không dùng tiền thật</b>
+        </div>
+
+        <div class="welcome-rules">
+            🎯 Chọn tối đa <b>3 con</b> để chơi<br>
+            🪙 Đặt số coin bạn muốn cược<br>
+            🎲 Nhấn <b>LẮC!</b> để tung 3 xúc xắc<br>
+            🎁 Trúng càng nhiều → nhận càng nhiều coin<br>
+            💎 Trúng cả 3 → <b>JACKPOT!</b>
+        </div>
+
+        <button class="start-button" onclick="startGame()">
+            🚀 BẮT ĐẦU CHƠI
+        </button>
+    </div>
+</div>
+
 
 <div class="header">
 
@@ -371,6 +545,12 @@ body {
     <div class="coin-box">
         <span class="coin">🪙</span>
         <span id="balance">1000</span>
+    </div>
+
+    <div class="dashboard">
+        <div class="stat">🏆 Kỷ lục<br><b id="highScore">1000</b></div>
+        <div class="stat">🔥 Chuỗi thắng<br><b id="winStreak">0</b></div>
+        <div class="stat">🎲 Số ván<br><b id="totalGames">0</b></div>
     </div>
 
 </div>
@@ -477,6 +657,17 @@ body {
     </div>
 
 
+    <div class="bonus-box">
+        <div class="bonus-title">🎁 Nhiệm vụ hôm nay</div>
+        <div id="mission">Chơi 5 ván để nhận <b>+500 🪙</b></div>
+        <div class="progress"><div id="progressBar"></div></div>
+    </div>
+
+    <div class="history-box">
+        <div class="history-title">📜 Lịch sử gần đây</div>
+        <div id="history">Chưa có ván nào.</div>
+    </div>
+
     <button
         class="reset"
         onclick="resetGame()"
@@ -507,8 +698,14 @@ const emojis = {
     "Nai": "🦌"
 };
 
-let balance = 1000;
+let balance = Number(localStorage.getItem("baucua_balance")) || 1000;
 let selected = [];
+let highScore = Number(localStorage.getItem("baucua_highScore")) || balance;
+let winStreak = Number(localStorage.getItem("baucua_winStreak")) || 0;
+let totalGames = Number(localStorage.getItem("baucua_totalGames")) || 0;
+let history = JSON.parse(localStorage.getItem("baucua_history") || "[]");
+let missionGames = Number(localStorage.getItem("baucua_missionGames")) || 0;
+let missionClaimed = localStorage.getItem("baucua_missionClaimed") === "1";
 
 
 /* =========================
@@ -580,6 +777,56 @@ function sound(type) {
     } catch(e) {}
 }
 
+
+function saveGame() {
+    localStorage.setItem("baucua_balance", balance);
+    localStorage.setItem("baucua_highScore", highScore);
+    localStorage.setItem("baucua_winStreak", winStreak);
+    localStorage.setItem("baucua_totalGames", totalGames);
+    localStorage.setItem("baucua_history", JSON.stringify(history));
+    localStorage.setItem("baucua_missionGames", missionGames);
+    localStorage.setItem("baucua_missionClaimed", missionClaimed ? "1" : "0");
+}
+
+function updateStats() {
+    document.getElementById("highScore").textContent =
+        highScore.toLocaleString("vi-VN");
+    document.getElementById("winStreak").textContent = winStreak;
+    document.getElementById("totalGames").textContent = totalGames;
+
+    const progress = Math.min(missionGames / 5 * 100, 100);
+    document.getElementById("progressBar").style.width = progress + "%";
+
+    document.getElementById("mission").innerHTML =
+        missionClaimed
+            ? "✅ Đã hoàn thành! Phần thưởng <b>+500 🪙</b>"
+            : `Chơi ${Math.min(missionGames, 5)}/5 ván để nhận <b>+500 🪙</b>`;
+
+    const historyEl = document.getElementById("history");
+    historyEl.innerHTML = history.length
+        ? history.map(x =>
+            `<div class="${x.win ? "history-win" : "history-lose"}">${x.text}</div>`
+          ).join("")
+        : "Chưa có ván nào.";
+}
+
+function addHistory(text, win) {
+    history.unshift({text, win});
+    history = history.slice(0, 6);
+}
+
+function playWinSound() {
+    sound("coin");
+    setTimeout(() => sound("coin"), 120);
+}
+
+function startGame() {
+    const overlay = document.getElementById("welcomeOverlay");
+    overlay.style.opacity = "0";
+    overlay.style.transition = "opacity .2s ease";
+    setTimeout(() => overlay.remove(), 200);
+    sound("click");
+}
 
 /* =========================
    CHỌN CON
@@ -758,79 +1005,87 @@ function finishRoll(bet) {
         randomAnimal()
     ];
 
-    const dice =
-        document.querySelectorAll(".die");
+    const dice = document.querySelectorAll(".die");
 
     dice.forEach((d, i) => {
-        d.textContent =
-            emojis[result[i]];
+        d.textContent = emojis[result[i]];
     });
 
     let count = 0;
 
     selected.forEach(name => {
-
         result.forEach(item => {
-
-            if (name === item) {
-                count++;
-            }
-
+            if (name === item) count++;
         });
-
     });
 
-
-    /*
-       Coin ảo:
-       Không trúng = 0
-       Trúng 1 = +2 lần cược
-       Trúng 2 = +3 lần cược
-       Trúng 3 = +4 lần cược
-    */
+    totalGames++;
+    missionGames++;
 
     if (count === 0) {
-
-        showResult(
-            "😢 Không trúng lần này!"
+        winStreak = 0;
+        addHistory(
+            `🎲 ${result.map(x => emojis[x]).join(" ")} &nbsp; −${bet.toLocaleString("vi-VN")} 🪙`,
+            false
         );
-
+        showResult("😢 Không trúng lần này!");
     } else {
-
-        const reward =
-            bet * (count + 1);
-
+        const reward = bet * (count + 1);
         balance += reward;
+        winStreak++;
+
+        if (balance > highScore) highScore = balance;
+
+        if (count === 3) {
+            const jackpotBonus = bet * 5;
+            balance += jackpotBonus;
+            highScore = Math.max(highScore, balance);
+            addHistory(
+                `🎉 JACKPOT ${result.map(x => emojis[x]).join(" ")} &nbsp; +${(reward + jackpotBonus).toLocaleString("vi-VN")} 🪙`,
+                true
+            );
+            showResult(
+                `🎉🎉 JACKPOT! +${(reward + jackpotBonus).toLocaleString("vi-VN")} 🪙`
+            );
+            document.getElementById("result").classList.add("jackpot");
+            setTimeout(() => {
+                document.getElementById("result").classList.remove("jackpot");
+            }, 900);
+            playWinSound();
+        } else {
+            addHistory(
+                `🎲 ${result.map(x => emojis[x]).join(" ")} &nbsp; +${reward.toLocaleString("vi-VN")} 🪙`,
+                true
+            );
+            showResult(
+                "🎉 Trúng " + count + " lần! +" +
+                reward.toLocaleString("vi-VN") + " 🪙"
+            );
+            sound("coin");
+        }
 
         updateBalance();
-
-        sound("coin");
-
-        showResult(
-            "🎉 Trúng " +
-            count +
-            " lần! +" +
-            reward.toLocaleString("vi-VN") +
-            " 🪙"
-        );
-
     }
 
-    document
-        .getElementById("result")
-        .classList.add("win");
+    if (missionGames >= 5 && !missionClaimed) {
+        balance += 500;
+        missionClaimed = true;
+        highScore = Math.max(highScore, balance);
+        showResult("🎁 Hoàn thành nhiệm vụ! +500 🪙");
+        sound("coin");
+        updateBalance();
+    }
+
+    updateStats();
+    saveGame();
+
+    document.getElementById("result").classList.add("win");
 
     setTimeout(() => {
-
-        document
-            .getElementById("result")
-            .classList.remove("win");
-
+        document.getElementById("result").classList.remove("win");
     }, 600);
 
-    document
-        .getElementById("rollButton")
-        .disabled = false;
+    document.getElementById("rollButton").disabled = false;
 }
 
 
@@ -854,10 +1109,10 @@ function randomAnimal() {
 ========================= */
 
 function updateBalance() {
-
     document.getElementById("balance")
-        .textContent =
-        balance.toLocaleString("vi-VN");
+        .textContent = balance.toLocaleString("vi-VN");
+    saveGame();
+    updateStats();
 }
 
 
@@ -873,40 +1128,49 @@ function showResult(text) {
 ========================= */
 
 function resetGame() {
+    if (!confirm("Bạn có chắc muốn xóa toàn bộ tiến trình và chơi lại từ đầu?")) {
+        return;
+    }
 
     balance = 1000;
-
     selected = [];
+    highScore = 1000;
+    winStreak = 0;
+    totalGames = 0;
+    history = [];
+    missionGames = 0;
+    missionClaimed = false;
+
+    localStorage.removeItem("baucua_balance");
+    localStorage.removeItem("baucua_highScore");
+    localStorage.removeItem("baucua_winStreak");
+    localStorage.removeItem("baucua_totalGames");
+    localStorage.removeItem("baucua_history");
+    localStorage.removeItem("baucua_missionGames");
+    localStorage.removeItem("baucua_missionClaimed");
 
     updateBalance();
 
-    document.getElementById("bet")
-        .value = 100;
+    document.getElementById("bet").value = 100;
 
-    document.getElementById("dice")
-        .innerHTML = `
-            <div class="die">❓</div>
-            <div class="die">❓</div>
-            <div class="die">❓</div>
-        `;
+    document.getElementById("dice").innerHTML = `
+        <div class="die">❓</div>
+        <div class="die">❓</div>
+        <div class="die">❓</div>
+    `;
 
-    document.querySelectorAll(".animal")
-        .forEach(element => {
+    document.querySelectorAll(".animal").forEach(element => {
+        element.classList.remove("selected");
+    });
 
-            element.classList.remove(
-                "selected"
-            );
+    document.getElementById("rollButton").disabled = false;
 
-        });
-
-    document.getElementById("rollButton")
-        .disabled = false;
-
-    showResult(
-        "Chọn con bạn muốn chơi!"
-    );
+    showResult("Chọn con bạn muốn chơi!");
+    updateStats();
 }
 
+updateBalance();
+updateStats();
 </script>
 
 </body>
