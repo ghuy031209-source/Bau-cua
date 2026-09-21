@@ -1,601 +1,1295 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>BẦU CUA COIN</title>
-    <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-        body {
-            background-color: #121212;
-            color: #ffffff;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            touch-action: manipulation;
-            overflow-x: hidden;
-            padding-bottom: 30px;
-        }
+<title>🎲 Bầu Cua Coin</title>
 
-        .header {
-            text-align: center;
-            padding: 15px;
-            width: 100%;
-            max-width: 500px;
-        }
+<style>
+* {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
 
-        h1 {
-            font-size: 24px;
-            color: #ffd700;
-        }
+body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: Arial, sans-serif;
+    color: white;
+    text-align: center;
 
-        .subtitle {
-            font-size: 13px;
-            color: #aaa;
-            margin-bottom: 6px;
-        }
+    background:
+        radial-gradient(circle at top, #ff6b35 0%, transparent 35%),
+        linear-gradient(145deg, #5b0000, #a90000 45%, #4b0000);
+}
 
-        .sound-status {
-            font-size: 11px;
-            color: #ffca28;
-            background: #2a2208;
-            padding: 4px 10px;
-            border-radius: 12px;
-            display: inline-block;
-            border: 1px solid #554300;
-            margin-bottom: 8px;
-        }
+/* HEADER */
 
-        .coin-balance {
-            background-color: #222;
-            padding: 8px 20px;
-            border-radius: 20px;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 20px;
-            font-weight: bold;
-            color: #ffd700;
-            border: 1px solid #444;
-        }
+.header {
+    padding: 25px 15px 10px;
+}
 
-        .stats-bar {
-            display: flex;
-            justify-content: space-around;
-            margin-top: 15px;
-            background: #1e1e1e;
-            padding: 10px;
-            border-radius: 10px;
-        }
+.title {
+    margin: 0;
+    font-size: 32px;
+    color: #ffd700;
+    text-shadow:
+        0 3px 0 #7a0000,
+        0 0 15px #ffb300;
+}
 
-        .stat-box {
-            font-size: 12px;
-            color: #ccc;
-            text-align: center;
-        }
+.subtitle {
+    margin-top: 8px;
+    color: #ffe9a6;
+}
 
-        .container {
-            width: 100%;
-            max-width: 500px;
-            padding: 0 10px;
-        }
+/* COIN */
 
-        /* Grid 3 cột mượt cho điện thoại */
-        .mascot-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            margin-top: 15px;
-        }
+.coin-box {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
 
-        .mascot-card {
-            background-color: #2a2a2a;
-            border: 2px solid #333;
-            border-radius: 12px;
-            padding: 12px 5px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            cursor: pointer;
-            transition: transform 0.15s ease, border-color 0.15s ease;
-            user-select: none;
-            -webkit-tap-highlight-color: transparent;
-        }
+    margin: 15px auto;
+    padding: 10px 22px;
 
-        .mascot-card:active {
-            transform: scale(0.92);
-        }
+    border: 2px solid #ffd700;
+    border-radius: 30px;
 
-        .mascot-card.selected {
-            border-color: #ffd700;
-            background-color: #38321a;
-        }
+    background: rgba(0,0,0,0.3);
+    box-shadow: 0 0 15px rgba(255,215,0,.35);
 
-        .mascot-card .icon {
-            font-size: 32px;
-        }
+    font-size: 22px;
+    font-weight: bold;
+}
 
-        .mascot-card .name {
-            font-size: 14px;
-            margin-top: 4px;
-            font-weight: bold;
-        }
+.coin {
+    font-size: 27px;
+}
 
-        .bet-section {
-            margin-top: 15px;
-        }
+/* GAME */
 
-        .section-title {
-            font-size: 14px;
-            margin-bottom: 8px;
-            color: #bbb;
-        }
+.game {
+    width: min(95%, 500px);
+    margin: auto;
+    padding: 18px;
 
-        .bet-options {
-            display: flex;
-            gap: 8px;
-        }
+    border: 2px solid #ffd700;
+    border-radius: 25px;
 
-        .bet-btn {
-            flex: 1;
-            padding: 10px 0;
-            background: #2a2a2a;
-            border: 1px solid #444;
-            color: #fff;
-            border-radius: 8px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: transform 0.1s;
-            -webkit-tap-highlight-color: transparent;
-        }
+    background: rgba(70,0,0,.72);
+    box-shadow:
+        0 15px 40px rgba(0,0,0,.4),
+        inset 0 0 25px rgba(255,180,0,.08);
+}
 
-        .bet-btn:active {
-            transform: scale(0.92);
-        }
+/* ANIMALS */
 
-        .bet-btn.active {
-            background: #ffd700;
-            color: #000;
-            border-color: #ffd700;
-        }
+.animals {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+}
 
-        .dice-section {
-            margin-top: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
+.animal {
+    position: relative;
 
-        .dice-container {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 15px;
-        }
+    padding: 15px 5px;
 
-        .dice {
-            width: 65px;
-            height: 65px;
-            background-color: #fff;
-            color: #000;
-            border-radius: 12px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 32px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-        }
+    border: 3px solid transparent;
+    border-radius: 18px;
 
-        /* Hiệu ứng xoay lắc xúc xắc */
-        .dice-shake {
-            animation: shake 0.5s infinite ease-in-out;
-        }
+    background: linear-gradient(#fff, #eee);
 
-        @keyframes shake {
-            0% { transform: translate(0, 0) rotate(0deg) scale(1); }
-            20% { transform: translate(-8px, 5px) rotate(-12deg) scale(1.1); }
-            40% { transform: translate(8px, -5px) rotate(12deg) scale(1.1); }
-            60% { transform: translate(-5px, -8px) rotate(-8deg) scale(1.05); }
-            80% { transform: translate(5px, 8px) rotate(8deg) scale(1.05); }
-            100% { transform: translate(0, 0) rotate(0deg) scale(1); }
-        }
+    color: #333;
 
-        .btn-roll {
-            width: 100%;
-            padding: 14px;
-            font-size: 18px;
-            font-weight: bold;
-            background: linear-gradient(135deg, #ff4e50, #f9d423);
-            border: none;
-            border-radius: 10px;
-            color: #fff;
-            cursor: pointer;
-            box-shadow: 0 4px 10px rgba(255, 78, 80, 0.4);
-            transition: opacity 0.2s;
-            -webkit-tap-highlight-color: transparent;
-        }
+    cursor: pointer;
 
-        .btn-roll:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-        }
+    transition:
+        transform .15s,
+        box-shadow .15s,
+        border .15s;
+}
 
-        .info-card {
-            background: #1e1e1e;
-            border-radius: 10px;
-            padding: 12px;
-            margin-top: 15px;
-            font-size: 13px;
-        }
+.animal:active {
+    transform: scale(.94);
+}
 
-        .info-title {
-            font-weight: bold;
-            margin-bottom: 6px;
-            color: #ffd700;
-        }
+.animal.selected {
+    transform: translateY(-5px) scale(1.04);
 
-        .progress-bar {
-            width: 100%;
-            height: 6px;
-            background: #333;
-            border-radius: 3px;
-            margin-top: 8px;
-            overflow: hidden;
-        }
+    border-color: #ffd700;
 
-        .progress-bar div {
-            height: 100%;
-            background: #ffd700;
-            transition: width 0.3s;
-        }
-    </style>
+    box-shadow:
+        0 0 10px #ffd700,
+        0 0 25px rgba(255,215,0,.8);
+}
+
+.icon {
+    display: block;
+    font-size: 48px;
+    margin-bottom: 5px;
+}
+
+.name {
+    font-size: 17px;
+    font-weight: bold;
+}
+
+/* MÀU ICON */
+
+.bau .icon {
+    filter: hue-rotate(80deg);
+}
+
+.cua .icon {
+    filter: saturate(2);
+}
+
+.tom .icon {
+    filter: hue-rotate(330deg) saturate(1.5);
+}
+
+.ca .icon {
+    filter: hue-rotate(150deg) saturate(1.5);
+}
+
+.ga .icon {
+    filter: saturate(1.8);
+}
+
+.nai .icon {
+    filter: sepia(1) saturate(2);
+}
+
+/* BET */
+
+.bet-title {
+    margin-top: 22px;
+    color: #ffd700;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.bet-control {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.bet-control button,
+.max-button {
+    border: none;
+    border-radius: 10px;
+
+    background: #6b1b1b;
+    color: white;
+
+    padding: 10px 14px;
+    font-weight: bold;
+
+    cursor: pointer;
+}
+
+#bet {
+    width: 120px;
+
+    border: 2px solid #ffd700;
+    border-radius: 10px;
+
+    text-align: center;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+/* DICE */
+
+.dice-area {
+    margin: 25px 0 15px;
+}
+
+.dice {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+
+    min-height: 75px;
+}
+
+.die {
+    width: 70px;
+    height: 70px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 18px;
+
+    background: white;
+    color: #333;
+
+    font-size: 45px;
+
+    box-shadow:
+        0 5px 10px rgba(0,0,0,.4);
+}
+
+.shaking {
+    animation: shake .12s infinite alternate;
+}
+
+@keyframes shake {
+    from {
+        transform: rotate(-8deg) translateY(-3px);
+    }
+
+    to {
+        transform: rotate(8deg) translateY(3px);
+    }
+}
+
+
+/* BÁT / ĐĨA LẮC XÚC XẮC */
+.dice-wrap {
+    position: relative;
+    width: 240px;
+    height: 105px;
+    margin: 0 auto;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+}
+
+.dice-wrap .dice {
+    width: 100%;
+    position: relative;
+    z-index: 1;
+    padding-bottom: 4px;
+}
+
+.dice-cover {
+    position: absolute;
+    z-index: 3;
+    top: 2px;
+    left: 50%;
+    width: 205px;
+    height: 82px;
+    transform: translateX(-50%);
+    border: 4px solid #ffd700;
+    border-radius: 50% 50% 42% 42% / 45% 45% 55% 55%;
+    background:
+        radial-gradient(circle at 45% 30%, #ff7777 0%, #d20b0b 35%, #7b0000 75%, #4a0000 100%);
+    box-shadow:
+        0 8px 0 #420000,
+        0 10px 22px rgba(0,0,0,.55),
+        inset 0 5px 8px rgba(255,255,255,.22);
+    cursor: pointer;
+    transition: transform .15s ease;
+}
+
+.dice-cover::before {
+    content: "🎲";
+    position: absolute;
+    left: 50%;
+    top: 12px;
+    transform: translateX(-50%);
+    font-size: 31px;
+    filter: drop-shadow(0 2px 2px rgba(0,0,0,.4));
+}
+
+.dice-cover::after {
+    content: "BẦU CUA";
+    position: absolute;
+    left: 50%;
+    bottom: 8px;
+    transform: translateX(-50%);
+    width: 100%;
+    color: #ffd700;
+    font-size: 12px;
+    font-weight: 900;
+    letter-spacing: 1px;
+    text-shadow: 0 2px 2px #500000;
+}
+
+.dice-cover.cover-shake {
+    animation: coverShake .11s infinite alternate;
+}
+
+.dice-cover.cover-hide {
+    animation: coverLift .35s ease forwards;
+}
+
+@keyframes coverShake {
+    from { transform: translateX(-50%) rotate(-7deg) translateY(-2px); }
+    to   { transform: translateX(-50%) rotate(7deg) translateY(3px); }
+}
+
+@keyframes coverLift {
+    0%   { opacity: 1; transform: translateX(-50%) translateY(0) scale(1); }
+    100% { opacity: 0; transform: translateX(-50%) translateY(-85px) scale(.9); }
+}
+
+@media(max-width:400px) {
+    .dice-wrap { width: 220px; }
+    .dice-cover { width: 190px; }
+}
+
+/* ROLL BUTTON */
+
+.roll-button {
+    width: 85%;
+
+    margin: 10px auto;
+    padding: 16px;
+
+    border: 3px solid #ffd700;
+    border-radius: 18px;
+
+    background: linear-gradient(#ff4747, #b50000);
+    color: white;
+
+    font-size: 24px;
+    font-weight: bold;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 5px 0 #620000,
+        0 0 15px rgba(255,215,0,.35);
+}
+
+.roll-button:active {
+    transform: translateY(4px);
+    box-shadow: 0 1px 0 #620000;
+}
+
+.roll-button:disabled {
+    opacity: .6;
+}
+
+/* RESULT */
+
+.result {
+    min-height: 45px;
+    margin: 15px 0;
+
+    color: #ffe68a;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.win {
+    animation: win .6s ease;
+}
+
+@keyframes win {
+    0% {
+        transform: scale(.8);
+        opacity: 0;
+    }
+
+    60% {
+        transform: scale(1.15);
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* RESET */
+
+.reset {
+    margin-top: 5px;
+
+    padding: 9px 18px;
+
+    border: none;
+    border-radius: 10px;
+
+    background: #444;
+    color: white;
+
+    cursor: pointer;
+}
+
+/* MOBILE */
+
+@media(max-width:400px) {
+    .dashboard {
+        gap: 5px;
+    }
+    .stat {
+        font-size: 11px;
+    }
+
+
+    .title {
+        font-size: 27px;
+    }
+
+    .game {
+        padding: 12px;
+    }
+
+    .icon {
+        font-size: 40px;
+    }
+
+    .die {
+        width: 60px;
+        height: 60px;
+        font-size: 38px;
+    }
+}
+
+
+/* WELCOME MODAL */
+.welcome-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: rgba(20,0,0,.78);
+    backdrop-filter: blur(6px);
+    animation: fadeIn .25s ease;
+}
+.welcome-card {
+    width: min(92%, 430px);
+    padding: 28px 22px 22px;
+    border: 3px solid #ffd700;
+    border-radius: 25px;
+    background:
+        radial-gradient(circle at top, #ff5b2e 0%, transparent 38%),
+        linear-gradient(145deg, #650000, #a90000 50%, #4b0000);
+    box-shadow: 0 20px 60px rgba(0,0,0,.65), 0 0 30px rgba(255,215,0,.3);
+    text-align: center;
+    animation: popIn .35s ease;
+}
+.welcome-icon {
+    font-size: 58px;
+    margin-bottom: 4px;
+}
+.welcome-title {
+    margin: 0;
+    color: #ffd700;
+    font-size: 30px;
+    text-shadow: 0 3px 0 #6f0000, 0 0 15px #ffb300;
+}
+.welcome-text {
+    margin: 10px 0 18px;
+    color: #ffe9a6;
+    line-height: 1.6;
+}
+.welcome-rules {
+    margin: 0 0 20px;
+    padding: 14px;
+    border-radius: 15px;
+    background: rgba(0,0,0,.25);
+    color: #fff4c7;
+    text-align: left;
+    line-height: 1.75;
+    font-size: 14px;
+}
+.start-button {
+    width: 100%;
+    padding: 14px;
+    border: 2px solid #ffd700;
+    border-radius: 15px;
+    background: linear-gradient(#ff4747, #b50000);
+    color: white;
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 5px 0 #620000;
+}
+.start-button:active {
+    transform: translateY(3px);
+    box-shadow: 0 2px 0 #620000;
+}
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+@keyframes popIn {
+    from { transform: scale(.82); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+/* DASHBOARD */
+.dashboard {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin: 10px auto 0;
+    width: min(95%, 500px);
+}
+.stat {
+    padding: 9px 4px;
+    border: 1px solid rgba(255,215,0,.55);
+    border-radius: 12px;
+    background: rgba(0,0,0,.22);
+    color: #ffe9a6;
+    font-size: 12px;
+}
+.stat b {
+    color: #ffd700;
+    font-size: 16px;
+}
+
+/* BONUS + HISTORY */
+.bonus-box, .history-box {
+    margin-top: 16px;
+    padding: 13px;
+    border-radius: 15px;
+    background: rgba(0,0,0,.22);
+    border: 1px solid rgba(255,215,0,.4);
+}
+.bonus-title, .history-title {
+    color: #ffd700;
+    font-weight: bold;
+    margin-bottom: 7px;
+}
+.progress {
+    height: 8px;
+    margin-top: 9px;
+    overflow: hidden;
+    border-radius: 20px;
+    background: rgba(255,255,255,.18);
+}
+#progressBar {
+    width: 0%;
+    height: 100%;
+    border-radius: 20px;
+    background: #ffd700;
+    transition: width .35s ease;
+}
+#history {
+    text-align: left;
+    font-size: 13px;
+    line-height: 1.8;
+    color: #ffe9a6;
+}
+.history-win { color: #ffe16b; }
+.history-lose { color: #ffb0b0; }
+
+.jackpot {
+    animation: jackpot .9s ease;
+}
+@keyframes jackpot {
+    0%,100% { transform: scale(1); }
+    30% { transform: scale(1.18) rotate(-2deg); }
+    60% { transform: scale(1.08) rotate(2deg); }
+}
+
+</style>
 </head>
+
 <body>
 
-    <div class="header">
-        <h1>🎲 BẦU CUA COIN 🎲</h1>
-        <div class="subtitle">Game giải trí • Coin ảo</div>
-        <div class="sound-status" id="sound-status">🔔 Bấm chọn linh vật bất kỳ để bật Âm Thanh</div>
-        <br>
-        <div class="coin-balance">
-            <span>🪙</span>
-            <span id="coin-amount">1000</span>
+<div class="welcome-overlay" id="welcomeOverlay">
+    <div class="welcome-card">
+        <div class="welcome-icon">🎲🪙🎲</div>
+        <h2 class="welcome-title">BẦU CUA COIN</h2>
+        <div class="welcome-text">
+            🎉 Chào mừng bạn đến với trò chơi!<br>
+            <b>Coin ảo • Chơi vui • Không dùng tiền thật</b>
         </div>
 
-        <div class="stats-bar">
-            <div class="stat-box">🏆 Kỷ lục<br><b id="high-score">1000</b></div>
-            <div class="stat-box">🔥 Chuỗi thắng<br><b id="win-streak">0</b></div>
-            <div class="stat-box">🎲 Số ván<br><b id="total-games">0</b></div>
+        <div class="welcome-rules">
+            🎯 Chọn tối đa <b>3 con</b> để chơi<br>
+            🪙 Đặt số coin bạn muốn cược<br>
+            🎲 Nhấn <b>LẮC!</b> để tung 3 xúc xắc<br>
+            🎁 Trúng càng nhiều → nhận càng nhiều coin<br>
+            💎 Trúng cả 3 → <b>JACKPOT!</b>
         </div>
+
+        <button class="start-button" onclick="startGame()">
+            🚀 BẮT ĐẦU CHƠI
+        </button>
+    </div>
+</div>
+
+
+<div class="header">
+
+    <h1 class="title">
+        🎲 BẦU CUA COIN 🎲
+    </h1>
+
+    <div class="subtitle">
+        Game giải trí • Coin ảo
     </div>
 
-    <div class="container">
-        <!-- Bàn đặt cược -->
-        <div class="mascot-grid">
-            <div class="mascot-card" onclick="selectMascot('🍐', this)">
-                <span class="icon">🍐</span>
-                <span class="name">Bầu</span>
-            </div>
-            <div class="mascot-card" onclick="selectMascot('🦀', this)">
-                <span class="icon">🦀</span>
-                <span class="name">Cua</span>
-            </div>
-            <div class="mascot-card" onclick="selectMascot('🦐', this)">
-                <span class="icon">🦐</span>
-                <span class="name">Tôm</span>
-            </div>
-            <div class="mascot-card" onclick="selectMascot('🐟', this)">
-                <span class="icon">🐟</span>
-                <span class="name">Cá</span>
-            </div>
-            <div class="mascot-card" onclick="selectMascot('🐓', this)">
-                <span class="icon">🐓</span>
-                <span class="name">Gà</span>
-            </div>
-            <div class="mascot-card" onclick="selectMascot('🦌', this)">
-                <span class="icon">🦌</span>
-                <span class="name">Nai</span>
-            </div>
-        </div>
-
-        <!-- Mức cược -->
-        <div class="bet-section">
-            <div class="section-title">🪙 Coin cược mỗi linh vật:</div>
-            <div class="bet-options">
-                <button class="bet-btn active" onclick="setBet(100, this)">100</button>
-                <button class="bet-btn" onclick="setBet(200, this)">200</button>
-                <button class="bet-btn" onclick="setBet(500, this)">500</button>
-                <button class="bet-btn" onclick="setBet(1000, this)">1000</button>
-            </div>
-        </div>
-
-        <!-- Xúc xắc & Nút Lắc -->
-        <div class="dice-section">
-            <div class="dice-container">
-                <div class="dice" id="dice-1">❓</div>
-                <div class="dice" id="dice-2">❓</div>
-                <div class="dice" id="dice-3">❓</div>
-            </div>
-            <button id="btn-roll" class="btn-roll" onclick="rollDice()">🎲 LẮC!</button>
-        </div>
-
-        <div class="info-card">
-            <div class="info-title">🎁 Nhiệm vụ hôm nay</div>
-            <div>Chơi 5 ván để nhận <b>+500 🪙</b></div>
-            <div class="progress-bar"><div id="task-progress" style="width: 0%;"></div></div>
-        </div>
-
-        <div class="info-card">
-            <div class="info-title">📜 Lịch sử gần đây</div>
-            <div id="history-list">Chưa có ván nào.</div>
-        </div>
+    <div class="coin-box">
+        <span class="coin">🪙</span>
+        <span id="balance">1000</span>
     </div>
 
-    <!-- SCRIPT GAME & ÂM THANH UNLOCK -->
-    <script>
-        let audioCtx = null;
+    <div class="dashboard">
+        <div class="stat">🏆 Kỷ lục<br><b id="highScore">1000</b></div>
+        <div class="stat">🔥 Chuỗi thắng<br><b id="winStreak">0</b></div>
+        <div class="stat">🎲 Số ván<br><b id="totalGames">0</b></div>
+    </div>
 
-        function initAudio() {
-            if (!audioCtx) {
-                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            }
-            if (audioCtx.state === 'suspended') {
-                audioCtx.resume();
-            }
-            // Unlock audio trên iOS Safari
-            try {
-                const buffer = audioCtx.createBuffer(1, 1, 22050);
-                const source = audioCtx.createBufferSource();
-                source.buffer = buffer;
-                source.connect(audioCtx.destination);
-                source.start(0);
-            } catch(e) {}
+</div>
 
-            const statusEl = document.getElementById('sound-status');
-            if (statusEl) {
-                statusEl.textContent = '🔊 Âm thanh: Đã kích hoạt';
-                statusEl.style.color = '#81c784';
-                statusEl.style.background = '#1b2e1b';
-                statusEl.style.borderColor = '#2e552e';
-            }
+
+<div class="game">
+
+    <div class="animals">
+
+        <div class="animal bau"
+             onclick="selectAnimal('Bầu',this)">
+            <span class="icon">🍐</span>
+            <span class="name">Bầu</span>
+        </div>
+
+        <div class="animal cua"
+             onclick="selectAnimal('Cua',this)">
+            <span class="icon">🦀</span>
+            <span class="name">Cua</span>
+        </div>
+
+        <div class="animal tom"
+             onclick="selectAnimal('Tôm',this)">
+            <span class="icon">🦐</span>
+            <span class="name">Tôm</span>
+        </div>
+
+        <div class="animal ca"
+             onclick="selectAnimal('Cá',this)">
+            <span class="icon">🐟</span>
+            <span class="name">Cá</span>
+        </div>
+
+        <div class="animal ga"
+             onclick="selectAnimal('Gà',this)">
+            <span class="icon">🐓</span>
+            <span class="name">Gà</span>
+        </div>
+
+        <div class="animal nai"
+             onclick="selectAnimal('Nai',this)">
+            <span class="icon">🦌</span>
+            <span class="name">Nai</span>
+        </div>
+
+    </div>
+
+
+    <div class="bet-title">
+        🪙 Coin cược
+    </div>
+
+    <div class="bet-control">
+
+        <button onclick="changeBet(-100)">
+            −100
+        </button>
+
+        <input
+            id="bet"
+            value="100"
+            inputmode="numeric"
+        >
+
+        <button onclick="changeBet(100)">
+            +100
+        </button>
+
+        <button class="max-button"
+                onclick="maxBet()">
+            MAX
+        </button>
+
+    </div>
+
+
+    <div class="dice-area">
+
+        <div class="dice-wrap" id="diceWrap">
+
+            <div class="dice" id="dice">
+                <div class="die">❓</div>
+                <div class="die">❓</div>
+                <div class="die">❓</div>
+            </div>
+
+            <div class="dice-cover" id="diceCover" title="Lắc xúc xắc"></div>
+
+        </div>
+
+    </div>
+
+
+    <button
+        class="roll-button"
+        id="rollButton"
+        onclick="roll()"
+    >
+        🎲 LẮC!
+    </button>
+
+
+    <div
+        class="result"
+        id="result"
+    >
+        Chọn con bạn muốn chơi!
+    </div>
+
+
+    <div class="bonus-box">
+        <div class="bonus-title">🎁 Nhiệm vụ hôm nay</div>
+        <div id="mission">Chơi 5 ván để nhận <b>+500 🪙</b></div>
+        <div class="progress"><div id="progressBar"></div></div>
+    </div>
+
+    <div class="history-box">
+        <div class="history-title">📜 Lịch sử gần đây</div>
+        <div id="history">Chưa có ván nào.</div>
+    </div>
+
+    <button
+        class="reset"
+        onclick="resetGame()"
+    >
+        🔄 Chơi lại
+    </button>
+
+</div>
+
+
+<script>
+
+const animals = [
+    "Bầu",
+    "Cua",
+    "Tôm",
+    "Cá",
+    "Gà",
+    "Nai"
+];
+
+const emojis = {
+    "Bầu": "🍐",
+    "Cua": "🦀",
+    "Tôm": "🦐",
+    "Cá": "🐟",
+    "Gà": "🐓",
+    "Nai": "🦌"
+};
+
+let balance = Number(localStorage.getItem("baucua_balance")) || 1000;
+let selected = [];
+let highScore = Number(localStorage.getItem("baucua_highScore")) || balance;
+let winStreak = Number(localStorage.getItem("baucua_winStreak")) || 0;
+let totalGames = Number(localStorage.getItem("baucua_totalGames")) || 0;
+let history = JSON.parse(localStorage.getItem("baucua_history") || "[]");
+let missionGames = Number(localStorage.getItem("baucua_missionGames")) || 0;
+let missionClaimed = localStorage.getItem("baucua_missionClaimed") === "1";
+
+
+/* =========================
+   ÂM THANH
+========================= */
+
+let audioContext;
+
+function sound(type) {
+    try {
+        if (!audioContext) {
+            audioContext = new (window.AudioContext || window.webkitAudioContext)();
         }
 
-        // Kích hoạt loa ngay khi chạm vào bất kỳ điểm nào trên màn hình
-        ['touchstart', 'click', 'pointerdown'].forEach(evt => {
-            document.addEventListener(evt, initAudio, { once: true });
-        });
+        if (audioContext.state === "suspended") audioContext.resume();
 
-        function playCoinSound() {
-            initAudio();
-            try {
-                const ctx = audioCtx;
-                if (!ctx || ctx.state !== 'running') return;
-                const osc = ctx.createOscillator();
-                const gain = ctx.createGain();
-                osc.type = 'sine';
-                osc.frequency.setValueAtTime(1200, ctx.currentTime);
-                osc.frequency.exponentialRampToValueAtTime(1800, ctx.currentTime + 0.08);
-                gain.gain.setValueAtTime(0.3, ctx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.08);
+        const now = audioContext.currentTime;
+
+        if (type === "coin") {
+            // 🪙 Ting ting — 2 nốt kim loại
+            [880, 1320].forEach((freq, i) => {
+                const osc = audioContext.createOscillator();
+                const gain = audioContext.createGain();
+
+                osc.type = "sine";
+                osc.frequency.value = freq;
+                gain.gain.setValueAtTime(0.001, now + i * .10);
+                gain.gain.exponentialRampToValueAtTime(.20, now + i * .10 + .015);
+                gain.gain.exponentialRampToValueAtTime(.001, now + i * .10 + .28);
+
                 osc.connect(gain);
-                gain.connect(ctx.destination);
-                osc.start();
-                osc.stop(ctx.currentTime + 0.08);
-            } catch (e) {}
-        }
-
-        function playRollSound() {
-            initAudio();
-            try {
-                const ctx = audioCtx;
-                if (!ctx || ctx.state !== 'running') return;
-                let count = 0;
-                const interval = setInterval(() => {
-                    const osc = ctx.createOscillator();
-                    const gain = ctx.createGain();
-                    osc.type = 'triangle';
-                    osc.frequency.setValueAtTime(150 + Math.random() * 250, ctx.currentTime);
-                    gain.gain.setValueAtTime(0.3, ctx.currentTime);
-                    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.06);
-                    osc.connect(gain);
-                    gain.connect(ctx.destination);
-                    osc.start();
-                    osc.stop(ctx.currentTime + 0.06);
-
-                    count++;
-                    if (count >= 10) clearInterval(interval);
-                }, 90);
-            } catch (e) {}
-        }
-
-        function playWinSound() {
-            initAudio();
-            try {
-                const ctx = audioCtx;
-                if (!ctx || ctx.state !== 'running') return;
-                const notes = [523.25, 659.25, 783.99];
-                notes.forEach((freq, idx) => {
-                    const osc = ctx.createOscillator();
-                    const gain = ctx.createGain();
-                    osc.type = 'sine';
-                    osc.frequency.setValueAtTime(freq, ctx.currentTime + idx * 0.12);
-                    gain.gain.setValueAtTime(0.3, ctx.currentTime + idx * 0.12);
-                    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + idx * 0.12 + 0.2);
-                    osc.connect(gain);
-                    gain.connect(ctx.destination);
-                    osc.start(ctx.currentTime + idx * 0.12);
-                    osc.stop(ctx.currentTime + idx * 0.12 + 0.2);
-                });
-            } catch (e) {}
-        }
-
-        function playJackpotSound() {
-            initAudio();
-            try {
-                const ctx = audioCtx;
-                if (!ctx || ctx.state !== 'running') return;
-                const notes = [523.25, 659.25, 783.99, 1046.50, 1318.51];
-                notes.forEach((freq, idx) => {
-                    const osc = ctx.createOscillator();
-                    const gain = ctx.createGain();
-                    osc.type = 'triangle';
-                    osc.frequency.setValueAtTime(freq, ctx.currentTime + idx * 0.1);
-                    gain.gain.setValueAtTime(0.35, ctx.currentTime + idx * 0.1);
-                    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + idx * 0.1 + 0.3);
-                    osc.connect(gain);
-                    gain.connect(ctx.destination);
-                    osc.start(ctx.currentTime + idx * 0.1);
-                    osc.stop(ctx.currentTime + idx * 0.1 + 0.3);
-                });
-            } catch (e) {}
-        }
-
-        const mascots = ['🍐', '🦀', '🦐', '🐟', '🐓', '🦌'];
-
-        let coin = 1000;
-        let currentBetAmount = 100;
-        let selectedMascots = [];
-        let streak = 0;
-        let gamesPlayed = 0;
-        let highScore = 1000;
-
-        function selectMascot(mascot, element) {
-            playCoinSound();
-            
-            if (selectedMascots.includes(mascot)) {
-                selectedMascots = selectedMascots.filter(m => m !== mascot);
-                element.classList.remove('selected');
-            } else {
-                if (selectedMascots.length >= 3) {
-                    alert("Bạn chỉ được chọn tối đa 3 linh vật!");
-                    return;
-                }
-                selectedMascots.push(mascot);
-                element.classList.add('selected');
-            }
-        }
-
-        function setBet(amount, element) {
-            playCoinSound();
-            currentBetAmount = amount;
-            document.querySelectorAll('.bet-btn').forEach(btn => btn.classList.remove('active'));
-            element.classList.add('active');
-        }
-
-        function rollDice() {
-            if (selectedMascots.length === 0) {
-                alert("Vui lòng chọn ít nhất 1 linh vật để đặt cược!");
-                return;
-            }
-
-            const totalBetCost = currentBetAmount * selectedMascots.length;
-            if (coin < totalBetCost) {
-                alert("Bạn không đủ Coin để đặt cược!");
-                return;
-            }
-
-            coin -= totalBetCost;
-            updateUI();
-
-            const btnRoll = document.getElementById('btn-roll');
-            const diceElements = [
-                document.getElementById('dice-1'),
-                document.getElementById('dice-2'),
-                document.getElementById('dice-3')
-            ];
-
-            btnRoll.disabled = true;
-            playRollSound();
-
-            diceElements.forEach(dice => {
-                dice.textContent = '❓';
-                dice.classList.add('dice-shake');
+                gain.connect(audioContext.destination);
+                osc.start(now + i * .10);
+                osc.stop(now + i * .10 + .3);
             });
 
+        } else if (type === "dice") {
+            // 🎲 Lạch cạch
+            const osc = audioContext.createOscillator();
+            const gain = audioContext.createGain();
+
+            osc.type = "square";
+            osc.frequency.setValueAtTime(180 + Math.random() * 120, now);
+            osc.frequency.exponentialRampToValueAtTime(70, now + .075);
+
+            gain.gain.setValueAtTime(.001, now);
+            gain.gain.exponentialRampToValueAtTime(.065, now + .008);
+            gain.gain.exponentialRampToValueAtTime(.001, now + .085);
+
+            osc.connect(gain);
+            gain.connect(audioContext.destination);
+            osc.start(now);
+            osc.stop(now + .09);
+
+        } else {
+            const osc = audioContext.createOscillator();
+            const gain = audioContext.createGain();
+
+            osc.type = "sine";
+            osc.frequency.value = 220;
+            gain.gain.setValueAtTime(.12, now);
+            gain.gain.exponentialRampToValueAtTime(.001, now + .15);
+
+            osc.connect(gain);
+            gain.connect(audioContext.destination);
+            osc.start(now);
+            osc.stop(now + .15);
+        }
+    } catch(e) {}
+}
+
+
+function saveGame() {
+    localStorage.setItem("baucua_balance", balance);
+    localStorage.setItem("baucua_highScore", highScore);
+    localStorage.setItem("baucua_winStreak", winStreak);
+    localStorage.setItem("baucua_totalGames", totalGames);
+    localStorage.setItem("baucua_history", JSON.stringify(history));
+    localStorage.setItem("baucua_missionGames", missionGames);
+    localStorage.setItem("baucua_missionClaimed", missionClaimed ? "1" : "0");
+}
+
+function updateStats() {
+    document.getElementById("highScore").textContent =
+        highScore.toLocaleString("vi-VN");
+    document.getElementById("winStreak").textContent = winStreak;
+    document.getElementById("totalGames").textContent = totalGames;
+
+    const progress = Math.min(missionGames / 5 * 100, 100);
+    document.getElementById("progressBar").style.width = progress + "%";
+
+    document.getElementById("mission").innerHTML =
+        missionClaimed
+            ? "✅ Đã hoàn thành! Phần thưởng <b>+500 🪙</b>"
+            : `Chơi ${Math.min(missionGames, 5)}/5 ván để nhận <b>+500 🪙</b>`;
+
+    const historyEl = document.getElementById("history");
+    historyEl.innerHTML = history.length
+        ? history.map(x =>
+            `<div class="${x.win ? "history-win" : "history-lose"}">${x.text}</div>`
+          ).join("")
+        : "Chưa có ván nào.";
+}
+
+function addHistory(text, win) {
+    history.unshift({text, win});
+    history = history.slice(0, 6);
+}
+
+function playWinSound() {
+    sound("coin");
+    setTimeout(() => sound("coin"), 120);
+}
+
+function startGame() {
+    const overlay = document.getElementById("welcomeOverlay");
+    overlay.style.opacity = "0";
+    overlay.style.transition = "opacity .2s ease";
+    setTimeout(() => overlay.remove(), 200);
+    sound("click");
+}
+
+/* =========================
+   CHỌN CON
+========================= */
+
+function selectAnimal(name, element) {
+
+    sound("click");
+
+    if (selected.includes(name)) {
+
+        selected =
+            selected.filter(x => x !== name);
+
+        element.classList.remove("selected");
+
+        showResult(
+            "Đã bỏ chọn " + name
+        );
+
+        return;
+    }
+
+    if (selected.length >= 3) {
+
+        showResult(
+            "⚠️ Chỉ chọn tối đa 3 con!"
+        );
+
+        return;
+    }
+
+    selected.push(name);
+
+    element.classList.add("selected");
+
+    showResult(
+        "Đã chọn: " +
+        selected.join(" • ")
+    );
+}
+
+
+/* =========================
+   BET
+========================= */
+
+function getBet() {
+
+    let value =
+        parseInt(
+            document.getElementById("bet").value
+        );
+
+    if (isNaN(value)) {
+        value = 0;
+    }
+
+    return value;
+}
+
+
+function changeBet(amount) {
+
+    let value = getBet();
+
+    value += amount;
+
+    if (value < 100)
+        value = 100;
+
+    if (value > balance)
+        value = balance;
+
+    document.getElementById("bet").value =
+        value;
+}
+
+
+function maxBet() {
+
+    document.getElementById("bet").value =
+        balance;
+}
+
+
+/* =========================
+   ROLL
+========================= */
+
+function roll() {
+
+    if (selected.length === 0) {
+
+        showResult(
+            "⚠️ Hãy chọn ít nhất 1 con!"
+        );
+
+        return;
+    }
+
+    let bet = getBet();
+
+    // Mỗi con được cược riêng số coin đã nhập.
+    // Chọn 1 con = 1 lần cược, chọn 3 con = 3 lần cược.
+    const totalBet = bet * selected.length;
+
+    if (bet <= 0 || totalBet > balance) {
+
+        showResult(
+            `⚠️ Không đủ coin! Cược ${selected.length} con cần ${totalBet.toLocaleString("vi-VN")} 🪙`
+        );
+
+        return;
+    }
+
+    balance -= totalBet;
+
+    updateBalance();
+
+    const button =
+        document.getElementById("rollButton");
+
+    button.disabled = true;
+
+    // 🥣 Đậy đĩa rồi lắc
+    const cover = document.getElementById("diceCover");
+    cover.classList.remove("cover-hide");
+    void cover.offsetWidth;
+    cover.classList.add("cover-shake");
+
+    const dice =
+        document.querySelectorAll(".die");
+
+    dice.forEach(d => {
+        d.classList.add("shaking");
+    });
+
+    let animationCount = 0;
+
+    const animation =
+        setInterval(() => {
+
+            dice.forEach(d => {
+
+                const random =
+                    animals[
+                        Math.floor(
+                            Math.random() *
+                            animals.length
+                        )
+                    ];
+
+                d.textContent =
+                    emojis[random];
+            });
+
+            // 🎲 Lạch cạch trong lúc lắc
+            if (animationCount % 2 === 0) sound("dice");
+
+            animationCount++;
+
+            if (animationCount >= 15) {
+
+                clearInterval(animation);
+
+                dice.forEach(d => {
+                    d.classList.remove(
+                        "shaking"
+                    );
+                });
+
+                finishRoll(bet);
+            }
+
+        }, 100);
+}
+
+
+/* =========================
+   FINISH
+========================= */
+
+function finishRoll(bet) {
+
+    const result = [
+        randomAnimal(),
+        randomAnimal(),
+        randomAnimal()
+    ];
+
+    const dice = document.querySelectorAll(".die");
+
+    dice.forEach((d, i) => {
+        d.textContent = emojis[result[i]];
+    });
+
+    // 🥣 Mở đĩa để lộ kết quả + tiếng xúc xắc chốt
+    const cover = document.getElementById("diceCover");
+    cover.classList.remove("cover-shake");
+    cover.classList.add("cover-hide");
+    sound("dice");
+
+    setTimeout(() => {
+        cover.classList.remove("cover-hide");
+    }, 550);
+
+    let count = 0;
+
+    selected.forEach(name => {
+        result.forEach(item => {
+            if (name === item) count++;
+        });
+    });
+
+    totalGames++;
+    missionGames++;
+
+    if (count === 0) {
+        winStreak = 0;
+        addHistory(
+            `🎲 ${result.map(x => emojis[x]).join(" ")} &nbsp; −${totalBet.toLocaleString("vi-VN")} 🪙`,
+            false
+        );
+        showResult("😢 Không trúng lần này!");
+    } else {
+        // Mỗi con trúng trả 2 lần tiền cược của con đó.
+        // Ví dụ cược 100 vào 3 con, trúng 2 con => nhận 400 coin.
+        const reward = bet * count * 2;
+        balance += reward;
+        winStreak++;
+
+        if (balance > highScore) highScore = balance;
+
+        if (count === 3) {
+            const jackpotBonus = bet * 5;
+            balance += jackpotBonus;
+            highScore = Math.max(highScore, balance);
+            addHistory(
+                `🎉 JACKPOT ${result.map(x => emojis[x]).join(" ")} &nbsp; +${(reward + jackpotBonus).toLocaleString("vi-VN")} 🪙`,
+                true
+            );
+            showResult(
+                `🎉🎉 JACKPOT! +${(reward + jackpotBonus).toLocaleString("vi-VN")} 🪙`
+            );
+            document.getElementById("result").classList.add("jackpot");
             setTimeout(() => {
-                diceElements.forEach(dice => dice.classList.remove('dice-shake'));
-
-                const results = [
-                    mascots[Math.floor(Math.random() * mascots.length)],
-                    mascots[Math.floor(Math.random() * mascots.length)],
-                    mascots[Math.floor(Math.random() * mascots.length)]
-                ];
-
-                diceElements[0].textContent = results[0];
-                diceElements[1].textContent = results[1];
-                diceElements[2].textContent = results[2];
-
-                calculateResult(results, totalBetCost);
-
-                btnRoll.disabled = false;
-            }, 1200);
+                document.getElementById("result").classList.remove("jackpot");
+            }, 900);
+            playWinSound();
+        } else {
+            addHistory(
+                `🎲 ${result.map(x => emojis[x]).join(" ")} &nbsp; +${reward.toLocaleString("vi-VN")} 🪙`,
+                true
+            );
+            showResult(
+                "🎉 Trúng " + count + " lần! +" +
+                reward.toLocaleString("vi-VN") + " 🪙"
+            );
+            sound("coin");
         }
 
-        function calculateResult(results, totalBetCost) {
-            let winnings = 0;
-            let matchCount = 0;
+        updateBalance();
+    }
 
-            selectedMascots.forEach(mascot => {
-                const count = results.filter(r => r === mascot).length;
-                if (count > 0) {
-                    winnings += (currentBetAmount * count) + currentBetAmount;
-                    matchCount += count;
-                }
-            });
+    if (missionGames >= 5 && !missionClaimed) {
+        balance += 500;
+        missionClaimed = true;
+        highScore = Math.max(highScore, balance);
+        showResult("🎁 Hoàn thành nhiệm vụ! +500 🪙");
+        sound("coin");
+        updateBalance();
+    }
 
-            coin += winnings;
-            gamesPlayed++;
+    updateStats();
+    saveGame();
 
-            if (winnings > 0) {
-                streak++;
-                if (matchCount === 3 && selectedMascots.length === 1) {
-                    playJackpotSound();
-                } else {
-                    playWinSound();
-                }
-            } else {
-                streak = 0;
-            }
+    document.getElementById("result").classList.add("win");
 
-            if (coin > highScore) {
-                highScore = coin;
-            }
+    setTimeout(() => {
+        document.getElementById("result").classList.remove("win");
+    }, 600);
 
-            const historyList = document.getElementById('history-list');
-            const netProfit = winnings - totalBetCost;
-            const resultText = netProfit >= 0 ? `+${netProfit}` : `${netProfit}`;
-            const historyItem = document.createElement('div');
-            historyItem.style.margin = "4px 0";
-            historyItem.textContent = `Ván ${gamesPlayed}: ${results.join(' ')} (${resultText} 🪙)`;
-            
-            if (historyList.textContent === "Chưa có ván nào.") historyList.textContent = "";
-            historyList.prepend(historyItem);
+    document.getElementById("rollButton").disabled = false;
+}
 
-            updateUI();
-        }
 
-        function updateUI() {
-            document.getElementById('coin-amount').textContent = coin;
-            document.getElementById('high-score').textContent = highScore;
-            document.getElementById('win-streak').textContent = streak;
-            document.getElementById('total-games').textContent = gamesPlayed;
+/* =========================
+   RANDOM
+========================= */
 
-            const progressPercent = Math.min((gamesPlayed / 5) * 100, 100);
-            document.getElementById('task-progress').style.width = progressPercent + '%';
+function randomAnimal() {
 
-            if (gamesPlayed === 5 && !window.taskRewarded) {
-                coin += 500;
-                window.taskRewarded = true;
-                playJackpotSound();
-                alert("🎉 Chúc mừng bạn đã hoàn thành nhiệm vụ 5 ván và nhận +500 🪙!");
-                document.getElementById('coin-amount').textContent = coin;
-            }
-        }
-    </script>
+    return animals[
+        Math.floor(
+            Math.random() *
+            animals.length
+        )
+    ];
+}
+
+
+/* =========================
+   UI
+========================= */
+
+function updateBalance() {
+    document.getElementById("balance")
+        .textContent = balance.toLocaleString("vi-VN");
+    saveGame();
+    updateStats();
+}
+
+
+function showResult(text) {
+
+    document.getElementById("result")
+        .textContent = text;
+}
+
+
+/* =========================
+   RESET
+========================= */
+
+function resetGame() {
+    if (!confirm("Bạn có chắc muốn xóa toàn bộ tiến trình và chơi lại từ đầu?")) {
+        return;
+    }
+
+    balance = 1000;
+    selected = [];
+    highScore = 1000;
+    winStreak = 0;
+    totalGames = 0;
+    history = [];
+    missionGames = 0;
+    missionClaimed = false;
+
+    localStorage.removeItem("baucua_balance");
+    localStorage.removeItem("baucua_highScore");
+    localStorage.removeItem("baucua_winStreak");
+    localStorage.removeItem("baucua_totalGames");
+    localStorage.removeItem("baucua_history");
+    localStorage.removeItem("baucua_missionGames");
+    localStorage.removeItem("baucua_missionClaimed");
+
+    updateBalance();
+
+    document.getElementById("bet").value = 100;
+
+    document.getElementById("dice").innerHTML = `
+        <div class="die">❓</div>
+        <div class="die">❓</div>
+        <div class="die">❓</div>
+    `;
+
+    const cover = document.getElementById("diceCover");
+    cover.classList.remove("cover-shake", "cover-hide");
+
+    document.querySelectorAll(".animal").forEach(element => {
+        element.classList.remove("selected");
+    });
+
+    document.getElementById("rollButton").disabled = false;
+
+    showResult("Chọn con bạn muốn chơi!");
+    updateStats();
+}
+
+updateBalance();
+updateStats();
+</script>
+
 </body>
 </html>
