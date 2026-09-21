@@ -711,7 +711,8 @@ body {
 
         <input
             id="bet"
-            value="100"
+            value="10"
+            min="10"
             inputmode="numeric"
         >
 
@@ -996,8 +997,8 @@ function changeBet(amount) {
 
     value += amount;
 
-    if (value < 100)
-        value = 100;
+    if (value < 10)
+        value = 10;
 
     if (value > balance)
         value = balance;
@@ -1290,7 +1291,7 @@ function resetGame() {
 
     updateBalance();
 
-    document.getElementById("bet").value = 100;
+    document.getElementById("bet").value = 10;
 
     document.getElementById("dice").innerHTML = `
         <div class="die">❓</div>
@@ -1299,18 +1300,15 @@ function resetGame() {
     `;
 
     const cover = document.getElementById("diceCover");
-    cover.classList.remove("cover-shake", "cover-hide");
+    if (cover) {
+        cover.classList.remove("cover-shake", "cover-hide");
+    }
 
     document.querySelectorAll(".animal").forEach(element => {
         element.classList.remove("selected");
     });
 
     document.getElementById("rollButton").disabled = false;
-
-    const cover = document.getElementById("diceCover");
-    if (cover) {
-        cover.classList.remove("cover-shake", "cover-hide");
-    }
 
     showResult("Chọn con bạn muốn chơi!");
     updateStats();
