@@ -370,6 +370,20 @@ body {
     opacity: .6;
 }
 
+
+/* INSUFFICIENT BALANCE */
+.insufficient-balance {
+    color: #ffdfdf !important;
+    text-shadow: 0 0 10px rgba(255, 60, 60, .55);
+    animation: insufficient .45s ease;
+}
+
+@keyframes insufficient {
+    0%   { transform: scale(.9); opacity: .4; }
+    60%  { transform: scale(1.08); opacity: 1; }
+    100% { transform: scale(1); }
+}
+
 /* RESULT */
 
 .result {
@@ -716,15 +730,12 @@ body {
     <div class="dice-area">
 
         <div class="dice-wrap" id="diceWrap">
-
             <div class="dice" id="dice">
                 <div class="die">❓</div>
                 <div class="die">❓</div>
                 <div class="die">❓</div>
             </div>
-
             <div class="dice-cover" id="diceCover" title="Lắc xúc xắc"></div>
-
         </div>
 
     </div>
@@ -1231,6 +1242,19 @@ function updateBalance() {
 }
 
 
+
+function showInsufficientBalance() {
+    const result = document.getElementById("result");
+    result.textContent = "⚠️ Số dư không đủ để cược!";
+    result.classList.remove("win", "jackpot", "insufficient-balance");
+    void result.offsetWidth;
+    result.classList.add("insufficient-balance");
+
+    setTimeout(() => {
+        result.classList.remove("insufficient-balance");
+    }, 900);
+}
+
 function showResult(text) {
 
     document.getElementById("result")
@@ -1282,6 +1306,11 @@ function resetGame() {
     });
 
     document.getElementById("rollButton").disabled = false;
+
+    const cover = document.getElementById("diceCover");
+    if (cover) {
+        cover.classList.remove("cover-shake", "cover-hide");
+    }
 
     showResult("Chọn con bạn muốn chơi!");
     updateStats();
