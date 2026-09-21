@@ -1101,7 +1101,7 @@ function roll() {
                     );
                 });
 
-                finishRoll(bet);
+                finishRoll(bet, totalBet);
             }
 
         }, 100);
@@ -1112,7 +1112,7 @@ function roll() {
    FINISH
 ========================= */
 
-function finishRoll(bet) {
+function finishRoll(bet, totalBet) {
 
     const result = [
         randomAnimal(),
