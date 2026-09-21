@@ -251,6 +251,92 @@ body {
     }
 }
 
+
+/* BÁT / ĐĨA LẮC XÚC XẮC */
+.dice-wrap {
+    position: relative;
+    width: 240px;
+    height: 105px;
+    margin: 0 auto;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+}
+
+.dice-wrap .dice {
+    width: 100%;
+    position: relative;
+    z-index: 1;
+    padding-bottom: 4px;
+}
+
+.dice-cover {
+    position: absolute;
+    z-index: 3;
+    top: 2px;
+    left: 50%;
+    width: 205px;
+    height: 82px;
+    transform: translateX(-50%);
+    border: 4px solid #ffd700;
+    border-radius: 50% 50% 42% 42% / 45% 45% 55% 55%;
+    background:
+        radial-gradient(circle at 45% 30%, #ff7777 0%, #d20b0b 35%, #7b0000 75%, #4a0000 100%);
+    box-shadow:
+        0 8px 0 #420000,
+        0 10px 22px rgba(0,0,0,.55),
+        inset 0 5px 8px rgba(255,255,255,.22);
+    cursor: pointer;
+    transition: transform .15s ease;
+}
+
+.dice-cover::before {
+    content: "🎲";
+    position: absolute;
+    left: 50%;
+    top: 12px;
+    transform: translateX(-50%);
+    font-size: 31px;
+    filter: drop-shadow(0 2px 2px rgba(0,0,0,.4));
+}
+
+.dice-cover::after {
+    content: "BẦU CUA";
+    position: absolute;
+    left: 50%;
+    bottom: 8px;
+    transform: translateX(-50%);
+    width: 100%;
+    color: #ffd700;
+    font-size: 12px;
+    font-weight: 900;
+    letter-spacing: 1px;
+    text-shadow: 0 2px 2px #500000;
+}
+
+.dice-cover.cover-shake {
+    animation: coverShake .11s infinite alternate;
+}
+
+.dice-cover.cover-hide {
+    animation: coverLift .35s ease forwards;
+}
+
+@keyframes coverShake {
+    from { transform: translateX(-50%) rotate(-7deg) translateY(-2px); }
+    to   { transform: translateX(-50%) rotate(7deg) translateY(3px); }
+}
+
+@keyframes coverLift {
+    0%   { opacity: 1; transform: translateX(-50%) translateY(0) scale(1); }
+    100% { opacity: 0; transform: translateX(-50%) translateY(-85px) scale(.9); }
+}
+
+@media(max-width:400px) {
+    .dice-wrap { width: 220px; }
+    .dice-cover { width: 190px; }
+}
+
 /* ROLL BUTTON */
 
 .roll-button {
@@ -629,11 +715,15 @@ body {
 
     <div class="dice-area">
 
-        <div class="dice" id="dice">
+        <div class="dice-wrap" id="diceWrap">
 
-            <div class="die">❓</div>
-            <div class="die">❓</div>
-            <div class="die">❓</div>
+            <div class="dice" id="dice">
+                <div class="die">❓</div>
+                <div class="die">❓</div>
+                <div class="die">❓</div>
+            </div>
+
+            <div class="dice-cover" id="diceCover" title="Lắc xúc xắc"></div>
 
         </div>
 
@@ -715,65 +805,65 @@ let missionClaimed = localStorage.getItem("baucua_missionClaimed") === "1";
 let audioContext;
 
 function sound(type) {
-
     try {
-
         if (!audioContext) {
-            audioContext =
-                new (window.AudioContext ||
-                window.webkitAudioContext)();
+            audioContext = new (window.AudioContext || window.webkitAudioContext)();
         }
 
-        const oscillator =
-            audioContext.createOscillator();
+        if (audioContext.state === "suspended") audioContext.resume();
 
-        const gain =
-            audioContext.createGain();
-
-        oscillator.connect(gain);
-        gain.connect(audioContext.destination);
+        const now = audioContext.currentTime;
 
         if (type === "coin") {
+            // 🪙 Ting ting — 2 nốt kim loại
+            [880, 1320].forEach((freq, i) => {
+                const osc = audioContext.createOscillator();
+                const gain = audioContext.createGain();
 
-            oscillator.frequency.value = 880;
+                osc.type = "sine";
+                osc.frequency.value = freq;
+                gain.gain.setValueAtTime(0.001, now + i * .10);
+                gain.gain.exponentialRampToValueAtTime(.20, now + i * .10 + .015);
+                gain.gain.exponentialRampToValueAtTime(.001, now + i * .10 + .28);
 
-            gain.gain.setValueAtTime(
-                0.18,
-                audioContext.currentTime
-            );
+                osc.connect(gain);
+                gain.connect(audioContext.destination);
+                osc.start(now + i * .10);
+                osc.stop(now + i * .10 + .3);
+            });
 
-            gain.gain.exponentialRampToValueAtTime(
-                0.001,
-                audioContext.currentTime + 0.25
-            );
+        } else if (type === "dice") {
+            // 🎲 Lạch cạch
+            const osc = audioContext.createOscillator();
+            const gain = audioContext.createGain();
 
-            oscillator.start();
+            osc.type = "square";
+            osc.frequency.setValueAtTime(180 + Math.random() * 120, now);
+            osc.frequency.exponentialRampToValueAtTime(70, now + .075);
 
-            oscillator.stop(
-                audioContext.currentTime + 0.25
-            );
+            gain.gain.setValueAtTime(.001, now);
+            gain.gain.exponentialRampToValueAtTime(.065, now + .008);
+            gain.gain.exponentialRampToValueAtTime(.001, now + .085);
+
+            osc.connect(gain);
+            gain.connect(audioContext.destination);
+            osc.start(now);
+            osc.stop(now + .09);
 
         } else {
+            const osc = audioContext.createOscillator();
+            const gain = audioContext.createGain();
 
-            oscillator.frequency.value = 220;
+            osc.type = "sine";
+            osc.frequency.value = 220;
+            gain.gain.setValueAtTime(.12, now);
+            gain.gain.exponentialRampToValueAtTime(.001, now + .15);
 
-            gain.gain.setValueAtTime(
-                0.12,
-                audioContext.currentTime
-            );
-
-            gain.gain.exponentialRampToValueAtTime(
-                0.001,
-                audioContext.currentTime + 0.15
-            );
-
-            oscillator.start();
-
-            oscillator.stop(
-                audioContext.currentTime + 0.15
-            );
+            osc.connect(gain);
+            gain.connect(audioContext.destination);
+            osc.start(now);
+            osc.stop(now + .15);
         }
-
     } catch(e) {}
 }
 
@@ -930,16 +1020,20 @@ function roll() {
 
     let bet = getBet();
 
-    if (bet <= 0 || bet > balance) {
+    // Mỗi con được cược riêng số coin đã nhập.
+    // Chọn 1 con = 1 lần cược, chọn 3 con = 3 lần cược.
+    const totalBet = bet * selected.length;
+
+    if (bet <= 0 || totalBet > balance) {
 
         showResult(
-            "⚠️ Số coin không hợp lệ!"
+            `⚠️ Không đủ coin! Cược ${selected.length} con cần ${totalBet.toLocaleString("vi-VN")} 🪙`
         );
 
         return;
     }
 
-    balance -= bet;
+    balance -= totalBet;
 
     updateBalance();
 
@@ -947,6 +1041,12 @@ function roll() {
         document.getElementById("rollButton");
 
     button.disabled = true;
+
+    // 🥣 Đậy đĩa rồi lắc
+    const cover = document.getElementById("diceCover");
+    cover.classList.remove("cover-hide");
+    void cover.offsetWidth;
+    cover.classList.add("cover-shake");
 
     const dice =
         document.querySelectorAll(".die");
@@ -973,6 +1073,9 @@ function roll() {
                 d.textContent =
                     emojis[random];
             });
+
+            // 🎲 Lạch cạch trong lúc lắc
+            if (animationCount % 2 === 0) sound("dice");
 
             animationCount++;
 
@@ -1011,6 +1114,16 @@ function finishRoll(bet) {
         d.textContent = emojis[result[i]];
     });
 
+    // 🥣 Mở đĩa để lộ kết quả + tiếng xúc xắc chốt
+    const cover = document.getElementById("diceCover");
+    cover.classList.remove("cover-shake");
+    cover.classList.add("cover-hide");
+    sound("dice");
+
+    setTimeout(() => {
+        cover.classList.remove("cover-hide");
+    }, 550);
+
     let count = 0;
 
     selected.forEach(name => {
@@ -1025,12 +1138,14 @@ function finishRoll(bet) {
     if (count === 0) {
         winStreak = 0;
         addHistory(
-            `🎲 ${result.map(x => emojis[x]).join(" ")} &nbsp; −${bet.toLocaleString("vi-VN")} 🪙`,
+            `🎲 ${result.map(x => emojis[x]).join(" ")} &nbsp; −${totalBet.toLocaleString("vi-VN")} 🪙`,
             false
         );
         showResult("😢 Không trúng lần này!");
     } else {
-        const reward = bet * (count + 1);
+        // Mỗi con trúng trả 2 lần tiền cược của con đó.
+        // Ví dụ cược 100 vào 3 con, trúng 2 con => nhận 400 coin.
+        const reward = bet * count * 2;
         balance += reward;
         winStreak++;
 
@@ -1158,6 +1273,9 @@ function resetGame() {
         <div class="die">❓</div>
         <div class="die">❓</div>
     `;
+
+    const cover = document.getElementById("diceCover");
+    cover.classList.remove("cover-shake", "cover-hide");
 
     document.querySelectorAll(".animal").forEach(element => {
         element.classList.remove("selected");
